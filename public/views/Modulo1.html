@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculadora Sistemas Fotovoltaicos</title>
+    <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+    <nav class="nav-bar">
+        <div class="logo-container">
+            <div class="logo">
+                <img src="Images/LogoTSolar.jpg" alt="Logo de T-SOLAR MÉXICO">
+            </div>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#">Inicio</a></li>
+            <li><a href="#">Calcular Sistemas Fotovoltaicos</a></li>
+        </ul>
+        <div class="menu-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+    <header class="header-principal">
+        <h1>CALCULADORA DE SISTEMAS FOTOVOLTAICOS INTERCONECTADOS</h1>
+    </header>
+        <div class="panel-inicial">
+        <div class="seccion-principal">
+            <h2>DETALLES DE USO ENERGÉTICO</h2>
+            <form class="formulario">
+                <ul class="bimestres">
+                    <li>
+                        <label class="fechas" for="fecha1">Fecha del Primer Bimestre:</label>
+                        <div class="fecha-bimestre">
+                            <label for="fecha1-inicio">Fecha Inicio:</label>
+                            <input type="date" id="fecha1-inicio" name="fecha1-inicio">
+                            <label class="fecha-final" for="fecha1-fin">Fecha Final:</label>
+                            <input type="date" id="fecha1-fin" name="fecha1-fin">
+                        </div>
+                    </li>
+                    <br><br>
+
+                    <li>
+                        <label class="fechas" for="fecha2">Fecha del Segundo Bimestre:</label>
+                        <div class="fecha-bimestre">
+                            <label for="fecha2-inicio">Fecha Inicio:</label>
+                            <input type="date" id="fecha2-inicio" name="fecha2-inicio">
+                            <label class="fecha-final" for="fecha2-fin">Fecha Final:</label>
+                            <input type="date" id="fecha2-fin" name="fecha2-fin">
+                        </div>
+                    </li>
+                    <br><br>
+
+                    <li>
+                        <label class="fechas" for="fecha3">Fecha del Tercer Bimestre:</label>
+                        <div class="fecha-bimestre">
+                            <label for="fecha3-inicio">Fecha Inicio:</label>
+                            <input type="date" id="fecha3-inicio" name="fecha3-inicio">
+                            <label class="fecha-final" for="fecha3-fin">Fecha Final:</label>
+                            <input type="date" id="fecha3-fin" name="fecha3-fin">
+                        </div>
+                    </li>
+                    <br><br>
+
+                    <li>
+                        <label class="fechas" for="fecha4">Fecha del Cuarto Bimestre:</label>
+                        <div class="fecha-bimestre">
+                            <label for="fecha4-inicio">Fecha Inicio:</label>
+                            <input type="date" id="fecha4-inicio" name="fecha4-inicio">
+                            <label class="fecha-final" for="fecha4-fin">Fecha Final:</label>
+                            <input type="date" id="fecha4-fin" name="fecha4-fin">
+                        </div>
+                    </li>
+
+                    <br><br>
+
+                    <li>
+                        <label class="fechas" for="fecha5">Fecha del Quinto Bimestre:</label>
+                        <div class="fecha-bimestre">
+                            <label for="fecha5-inicio">Fecha Inicio:</label>
+                            <input type="date" id="fecha5-inicio" name="fecha5-inicio">
+                            <label class="fecha-final" for="fecha5-fin">Fecha Final:</label>
+                            <input type="date" id="fecha5-fin" name="fecha5-fin">
+                        </div>
+                    </li>
+
+                    <br><br>
+
+                    <li>
+                        <label class="fechas" for="fecha6">Fecha del Sexto Bimestre:</label>
+                        <div class="fecha-bimestre">
+                            <label for="fecha6-inicio">Fecha Inicio:</label>
+                            <input type="date" id="fecha6-inicio" name="fecha6-inicio">
+                            <label class="fecha-final" for="fecha6-fin">Fecha Final:</label>
+                            <input type="date" id="fecha6-fin" name="fecha6-fin">
+                        </div>
+                    </li>
+
+                </ul>
+            </form>
+            <br><br>
+            <div class="botones">
+                <script src="../controller/acciones.js"></script>
+                <button class="cancelar" onclick="cancelar()">Cancelar</button>
+                <button class="continuar" onclick="continuar()">Continuar</button>
+            </div>
+        </div>
+        <div class="seccion-instrucciones">
+            <h3>Instrucciones</h3>
+            <ul>
+                <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet nulla auctor, vestibulum magna
+                    sed, convallis ex.</li>
+                <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet nulla auctor, vestibulum magna
+                    sed, convallis ex.</li>
+                <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet nulla auctor, vestibulum magna
+                    sed, convallis ex.</li>
+            </ul>
+        </div>
+    </div>
+</body>
+
+</html>
