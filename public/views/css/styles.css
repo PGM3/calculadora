@@ -1,285 +1,101 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"); /* Importación de la fuente Poppins */
 
 body {
-  background-color: #ffffff;
-  font-family: "Poppins", sans-serif;
-  margin: 0; /* Añadido para eliminar el margen predeterminado del body */
+  font-family: Poppins;
+  margin: 0;
+  background-color: #f4f4f4;
 }
 
-/* Barra de navegación */
+header {
+  background-color: #4CAF50;
+  font-size: 18px;
+  color: white;
+  padding: 2rem 09;
+}
+
 .nav-bar {
-  background-color: #2ea300;
-  padding: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 5px 90px;
 }
 
-.logo-container {
-  display: flex;
-  align-items: center;
+.logo {
+  float: right;
+  padding-top: 30px;
+  margin-left: 1.5rem;
 }
 
 .logo img {
-  width: 260px;
-  height: auto;
+  height: 100px;
 }
 
-.nav-links {
-  list-style: none;
-  display: flex;
-  font-size: 26px;
-  margin: 0; /* Añadido para eliminar el margen predeterminado de la lista */
-  padding: 0; /* Añadido para eliminar el padding predeterminado de la lista */
-}
-
-.nav-links li {
-  margin-right: 150px;
-}
-
-.nav-links li:last-child {
-  margin-right: 0; /* Elimina el margen derecho del último elemento */
-}
-
-.nav-links a {
-  color: #fff;
-  text-decoration: none;
-  position: relative;
-  transition: 0.3s; /* Añadido para suavizar la transición del efecto hover */
-}
-
-/* Efecto de subrayado en los enlaces */
-.nav-links a::after {
-  content: "";
-  position: absolute;
-  bottom: -2px; /* Ajustado para que aparezca justo debajo del texto */
-  left: 0;
-  width: 0; /* Comienza sin ancho */
-  height: 2px;
-  background-color: #fff;
-  transition: 0.3s;
-}
-
-.nav-links a:hover::after {
-  width: 100%; /* Se expande al 100% en hover */
-}
-
-.menu-icon {
-  cursor: pointer;
-  display: none; /* Oculto por defecto, se puede mostrar en diseño responsive */
-}
-
-.menu-icon span {
-  background-color: #fff;
-  width: 30px;
-  height: 2px;
-  margin-bottom: 5px; /* Aumentado para mejor espaciado */
-  display: block;
-}
-
-/* Encabezado principal */
-.header-principal {
-  background-color: #f7d002;
-  border-radius: 40px;
-  margin: 30px auto;
-  text-align: center;
-  border: 2px solid #f7d002;
-  width: 650px;
-  padding: 10px 0; /* Añadido para dar espacio interno vertical */
-}
-
-.header-principal h1 {
-  color: #000;
-  font-size: 32px;
-  font-weight: bold;
-  text-transform: uppercase;
-  margin: 0; /* Elimina los márgenes predeterminados */
-}
-
-/* Sección principal */
-.seccion-principal {
-  background-color: #fff;
-  padding: 20px;
-  border: 2px solid #34c759;
-  border-radius: 10px;
-  width: 800px;
-  margin: 20px auto;
-  box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
-}
-
-.seccion-principal h2 {
-  text-align: center;
-  font-size: 24px;
-  font-weight: bold;
-  color: #000;
-  margin-top: 0; /* Elimina el margen superior */
-}
-
-/* Estilos del formulario */
-.formulario {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Estilos de los campos de fechas */
-.bimestres input[type="date"] {
-  width: 150px;
-  padding: 10px;
-  margin: 20px 10px 0;
-  border: 1px solid #000;
-  border-radius: 20px;
+h1, h2 {
   text-align: center;
 }
 
-label.fechas {
-  font-weight: bold;
-  display: block; /* Asegura que las etiquetas estén en una línea separada */
-  margin-bottom: 5px; /* Añade espacio debajo de las etiquetas */
+main {
+  padding: 2em 0;
 }
 
-/* Sección de botones */
-.botones {
-  display: flex;
-  justify-content: center; /* Cambiado a center para mejor alineación */
-  margin-top: 20px; /* Añade espacio arriba de los botones */
-}
-
-.botones button {
-  width: 250px;
-  height: 35px;
-  border-radius: 5px;
-  cursor: pointer;
-  margin: 0 10px;
-  font-size: medium;
-  font-weight: bolder;
-  transition: background-color 0.3s; /* Suaviza la transición del color de fondo */
-}
-
-.botones button:hover {
-  background-color: #f7d002;
-}
-
-.cancelar {
-  background-color: black;
-  color: white;
-  border: 1px solid black;
-}
-
-.continuar {
-  background-color: #2ea300;
-  color: white;
-  border: 1px solid #333;
-}
-
-/* Sección de instrucciones */
-.seccion-instrucciones {
-  background-color: #f7f7f7;
-  padding: 20px;
-  height: 350px;
-  width: 400px;
-  border: 1px solid #000;
-  border-radius: 10px;
-  margin: 40px auto;
-  overflow-y: auto; /* Añadido para permitir desplazamiento si el contenido excede la altura */
-}
-
-.seccion-instrucciones h3 {
-  font-size: 18px;
-  font-weight: bold;
-  color: #000;
-  margin-bottom: 10px;
-}
-
-.seccion-instrucciones ul {
-  list-style: circle;
-  margin: 15px;
-  padding: 0 0 0 20px; /* Ajustado para alinear mejor los puntos de la lista */
-}
-
-.seccion-instrucciones li {
-  margin-bottom: 10px;
-  font-size: 16px;
-  color: #333;
-}
-
-/* Sección de consumo */
 .seccion-consumo {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Cambiado a 1fr para un reparto más equitativo */
-  grid-gap: 20px;
-  justify-content: center;
-  align-items: center;
-  border: 2px solid #34c759;
-  border-radius: 10px;
-  width: 1000px;
-  margin: 20px auto;
-  height: auto; /* Cambiado a auto para adaptarse al contenido */
-  padding: 20px 50px; /* Ajustado el padding para ser más consistente */
-  box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
-}
-
-.panel-sistema {
-  display: grid;
-  grid-template-rows: auto auto; /* Ajustado para adaptarse al contenido */
-  justify-content: center;
-  align-items: center;
-}
-
-.seccion-titulo {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 10px; /* Añadido para separar del contenido siguiente */
-}
-
-.valor-resultado,
-input[type="number"] {
-  display: inline-block;
-  padding: 5px;
-  border: 1px solid #000000;
+  background-color: white;
+  padding: 2em;
+  margin-bottom: 2em;
   border-radius: 5px;
-  background-color: #f7f7f7;
-  font-size: 18px;
-  font-weight: bold;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  width: 250px;
-  height: 16px;
 }
 
-/* Disposición general */
-.panel-inicial {
-  display: flex;
-  justify-content: space-between;
+table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.seccion-principal {
-  width: 55%;
+th, td {
+  padding: 1em;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
 }
 
-/* Media queries para responsividad */
-@media (max-width: 1200px) {
-  .seccion-consumo {
-    width: 90%;
-    padding: 20px;
-  }
+th {
+  background-color: #f0f0f0;
 }
 
-@media (max-width: 768px) {
-  .nav-links {
-    display: none; /* Oculta los enlaces en pantallas pequeñas */
-  }
+.input-group {
+  margin-bottom: 1em;
+}
 
-  .menu-icon {
-    display: block; /* Muestra el icono de menú en pantallas pequeñas */
-  }
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+}
 
-  .seccion-principal,
-  .header-principal {
-    width: 90%;
-  }
+.input-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+}
 
-  .seccion-consumo {
-    grid-template-columns: 1fr; /* Cambia a una columna en pantallas pequeñas */
-  }
+.buttons {
+  text-align: center;
+}
+
+.buttons button {
+  padding: 10px 20px;
+  margin: 0 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.buttons button:hover {
+  background-color: #3e8e41;
+}
+
+footer {
+  background-color: #333;
+  color: white;
+  padding: 1em 0;
+  text-align: center;
 }

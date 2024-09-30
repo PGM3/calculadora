@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Sistemas Fotovoltaicos</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <header>
+        <div class="nav-bar">
+            <a href="#" class="logo"><img src="Images/LogoTSolar.jpg" alt="Logo"></a>
+            <h1>CALCULADORA DE SISTEMAS FOTOVOLTAICOS</h1>
+        </div>
+    </header>
+    <main>
+        <div class="CONSUMO">
+            <div class="seccion-consumo">
+                <h2>DETALLES DE CONSUMO ENERGÉTICO</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Bimestre</th>
+                            <th>Fecha Inicio</th>
+                            <th>Fecha Término</th>
+                            <th>Consumo Energético</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Fecha del Primer Bimestre:</td>
+                            <td><input type="date"></td>
+                            <td><input type="date"></td>
+                            <td><input type="number"></td>
+                        </tr>
+                        <tr>
+                            <td>Fecha del Segundo Bimestre:</td>
+                            <td><input type="date"></td>
+                            <td><input type="date"></td>
+                            <td><input type="number"></td>
+                        </tr>
+                        <tr>
+                            <td>Fecha del Tercer Bimestre:</td>
+                            <td><input type="date"></td>
+                            <td><input type="date"></td>
+                            <td><input type="number"></td>
+                        </tr>
+                        <tr>
+                            <td>Fecha del Cuarto Bimestre:</td>
+                            <td><input type="date"></td>
+                            <td><input type="date"></td>
+                            <td><input type="number"></td>
+                        </tr>
+                        <tr>
+                            <td>Fecha del Quinto Bimestre:</td>
+                            <td><input type="date"></td>
+                            <td><input type="date"></td>
+                            <td><input type="number"></td>
+                        </tr>
+                        <tr>
+                            <td>Fecha del Sexto Bimestre:</td>
+                            <td><input type="date"></td>
+                            <td><input type="date"></td>
+                            <td><input type="number"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="UBICACION">
+            <div class="seccion-ubicacion">
+                <h2>INFORMACIÓN DE LA UBICACIÓN</h2>
+                <div class="input-group">
+                    <label for="ubicacion">Ubicación del Sitio:</label>
+                    <input type="text" id="ubicacion">
+                </div>
+                <div class="input-group">
+                    <label for="propiedad">Tipo de Propiedad:</label>
+                    <input type="text" id="propiedad">
+                </div>
+                <div class="input-group">
+                    <label for="radiacion">Radiación Diaria del Sitio:</label>
+                    <input type="number" id="radiacion">
+                </div>
+                <div class="buttons">
+                    <button type="button">Continuar</button>
+                    <button type="button">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 T-SOLAR MÉXICO</p>
+        </div>
+    </footer>
+</body>
+
+</html>
