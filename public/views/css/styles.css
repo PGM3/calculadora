@@ -2,14 +2,15 @@
 
 body {
   font-family: Poppins;
+  font-size: 16px;
   margin: 0;
   background-color: #f4f4f4;
 }
 
 header {
-  background-color: #4CAF50;
+  background-color: #168012;
   font-size: 18px;
-  color: white;
+  color: #ffffff;
   padding: 2rem 09;
 }
 
@@ -37,11 +38,26 @@ main {
   padding: 2em 0;
 }
 
+.contenedor-principal{
+  display: flex;
+  justify-content: space-between;
+}
+
+.seccion-consumo, .seccion-ubicacion{
+    flex: 1;
+    margin: 10px; 
+}
+
 .seccion-consumo {
+  width: 70%;
   background-color: white;
-  padding: 2em;
+  padding: 1em;
   margin-bottom: 2em;
   border-radius: 5px;
+}
+
+.seccion-consumo input{
+  width: 100%;
 }
 
 table {
@@ -50,26 +66,34 @@ table {
 }
 
 th, td {
-  padding: 1em;
+  padding: 0.7em;
   border-bottom: 1px solid #ddd;
   text-align: left;
 }
 
 th {
-  background-color: #f0f0f0;
+  background-color: #fff;
 }
 
-.input-group {
+.seccion-ubicacion {
+  width: 50%;
+  background-color: #ffffff;
+  padding: 1em;
+  margin-bottom: 2em;
+  border-radius: 5px;
+}
+
+.input-ubicacion {
   margin-bottom: 1em;
 }
 
-.input-group label {
+.input-ubicacion label {
   display: block;
   margin-bottom: 5px;
 }
 
-.input-group input {
-  width: 100%;
+.input-ubicacion input {
+  width: 80%;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 3px;
