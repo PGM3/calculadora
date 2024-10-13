@@ -12,86 +12,91 @@
     <header>
         <div class="nav-bar">
             <a href="#" class="logo"><img src="Images/LogoTSolar.jpg" alt="Logo"></a>
-            <h1>CALCULADORA DE SISTEMAS FOTOVOLTAICOS</h1>
+            <button class="ic--baseline-home">
+            </button>
+            <h1>CALCULADORA DE <br> SISTEMAS FOTOVOLTAICOS</h1>
         </div>
     </header>
     <main>
         <div class="contenedor-principal">
-        <div class="CONSUMO">
-            <div class="seccion-consumo">
-                <h2>DETALLES DE CONSUMO ENERGÉTICO</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Bimestre</th>
-                            <th>Fecha Inicio</th>
-                            <th>Fecha Término</th>
-                            <th>Consumo Energético</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Fecha del Primer Bimestre:</td>
-                            <td><input type="date"></td>
-                            <td><input type="date"></td>
-                            <td><input type="number"></td>
-                        </tr>
-                        <tr>
-                            <td>Fecha del Segundo Bimestre:</td>
-                            <td><input type="date"></td>
-                            <td><input type="date"></td>
-                            <td><input type="number"></td>
-                        </tr>
-                        <tr>
-                            <td>Fecha del Tercer Bimestre:</td>
-                            <td><input type="date"></td>
-                            <td><input type="date"></td>
-                            <td><input type="number"></td>
-                        </tr>
-                        <tr>
-                            <td>Fecha del Cuarto Bimestre:</td>
-                            <td><input type="date"></td>
-                            <td><input type="date"></td>
-                            <td><input type="number"></td>
-                        </tr>
-                        <tr>
-                            <td>Fecha del Quinto Bimestre:</td>
-                            <td><input type="date"></td>
-                            <td><input type="date"></td>
-                            <td><input type="number"></td>
-                        </tr>
-                        <tr>
-                            <td>Fecha del Sexto Bimestre:</td>
-                            <td><input type="date"></td>
-                            <td><input type="date"></td>
-                            <td><input type="number"></td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="titulo">
+                <h1>CALCULADORA DE SISTEMAS <br> FOTOVOLTAICOS INTERCONECTADOS</h1>
             </div>
-        </div>
-        <div class="UBICACION">
-            <div class="seccion-ubicacion">
-                <h2>INFORMACIÓN DE LA UBICACIÓN</h2>
-                <div class="input-ubicacion">
-                    <label for="ubicacion">Ubicación del Sitio:</label>
-                    <input type="text" id="ubicacion">
+            <div class="CONSUMO">
+                <div class="seccion-consumo">
+                    <h2>DETALLES DE CONSUMO ENERGÉTICO</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Bimestre</th>
+                                <th>Fecha Inicio</th>
+                                <th>Fecha Término</th>
+                                <th>Consumo Energético</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Fecha del Primer Bimestre:</td>
+                                <td><input type="date"></td>
+                                <td><input type="date"></td>
+                                <td><input class="consumos" type="number"></td>
+                            </tr>
+                            <tr>
+                                <td>Fecha del Segundo Bimestre:</td>
+                                <td><input type="date"></td>
+                                <td><input type="date"></td>
+                                <td><input class="consumos" type="number"></td>
+                            </tr>
+                            <tr>
+                                <td>Fecha del Tercer Bimestre:</td>
+                                <td><input type="date"></td>
+                                <td><input type="date"></td>
+                                <td><input class="consumos" type="number"></td>
+                            </tr>
+                            <tr>
+                                <td>Fecha del Cuarto Bimestre:</td>
+                                <td><input type="date"></td>
+                                <td><input type="date"></td>
+                                <td><input class="consumos" type="number"></td>
+                            </tr>
+                            <tr>
+                                <td>Fecha del Quinto Bimestre:</td>
+                                <td><input type="date"></td>
+                                <td><input type="date"></td>
+                                <td><input class="consumos" type="number"></td>
+                            </tr>
+                            <tr>
+                                <td>Fecha del Sexto Bimestre:</td>
+                                <td><input type="date"></td>
+                                <td><input type="date"></td>
+                                <td><input class="consumos" type="number"></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <div class="input-ubicacion">
-                    <label for="propiedad">Tipo de Propiedad:</label>
-                    <input type="text" id="propiedad">
-                </div>
-                <div class="input-ubicacion">
-                    <label for="radiacion">Radiación Diaria del Sitio:</label>
-                    <input type="number" id="radiacion">
+            </div>
+            <div class="UBICACION">
+                <div class="seccion-ubicacion">
+                    <h2>INFORMACIÓN DE <br> LA UBICACIÓN</h2>
+                    <div class="input-ubicacion">
+                        <label for="ubicacion">Ubicación del Sitio:</label>
+                        <input type="text" id="ubicacion">
+                    </div>
+                    <div class="input-ubicacion">
+                        <label for="propiedad">Tipo de Propiedad:</label>
+                        <input type="text" id="propiedad">
+                    </div>
+                    <div class="input-ubicacion">
+                        <label for="radiacion">Radiación Diaria del Sitio:</label>
+                        <input type="number" id="radiacion">
+                    </div>
                 </div>
                 <div class="buttons">
-                    <button type="button">Continuar</button>
-                    <button type="button">Cancelar</button>
+                    <button class="continuar" type="button">Continuar</button>
+                    <button class="cancelar" type="button">Cancelar</button>
                 </div>
             </div>
         </div>
-    </div>
     </main>
     <footer>
         <div class="container">
