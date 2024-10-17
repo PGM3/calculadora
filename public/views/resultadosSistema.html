@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Sistemas Fotovoltaicos</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <header>
+        <div class="nav-bar">
+            <a href="#" class="logo"><img src="Images/LogoTSolar.jpg" alt="Logo"></a>
+            <button class="ic--baseline-home"></button>
+            <h1>CALCULADORA DE <br> SISTEMAS FOTOVOLTAICOS</h1>
+        </div>
+    </header>
+    <main>
+        <div class="contenedor-principal">
+            <div class="seccion-tamano">
+                <h3>TAMAÑO DEL SISTEMA</h3>
+                <label for="potencia-pico">Potencia Pico del Sistema (KW):</label>
+                <input id="potencia-pico" type="text" />
+            </div>
+            <div class="seccion-promedios">
+                <table class="tabla-consumo">
+                    <tr>
+                        <h3 class="promedios">CONSUMO ENERGÉTICO</h3>
+                    </tr>
+                    <tr>
+                        <th>Promedio Diario Calculado</th>
+                        <th>Promedio Mensual Calculado</th>
+                        <th>Promedio Anual Calculado</th>
+                    </tr>
+                    <tr>
+                        <td><input id="promedio-diario" type="text" /></td>
+                        <td><input id="promedio-mensual" type="text" /></td>
+                        <td><input id="promedio-anual" type="text" /></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="contenedor-principal">
+            <div class="seccion-inversor">
+                <table class="tabla-inversor">
+                    <tr>
+                        <th colspan="2">
+                            <h3>Inversores para el Sistema</h3>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td><label for="marca-inversor">Marca del Inversor:</label></td>
+                    </tr>
+                    <tr>
+                        <td><input id="marca-inversor" type="text" /></td>
+                    </tr>
+                    <tr>
+                        <td><label for="potencia-inversor">Potencia Nominal de Salida (W):</label></td>
+                    </tr>
+                    <tr>
+                        <td><input id="potencia-inversor" type="text" /></td>
+                    </tr>
+                    <tr>
+                        <td><label for="inversores-utilizar">Inversores a utilizar:</label></td>
+                    </tr>
+                    <tr>
+                        <td><input id="inversores-utilizar" type="text" /></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="seccion-modulos">
+                <table class="tabla-modulos">
+                    <tr>
+                        <th colspan="2">
+                            <h3>Módulos para el Sistema</h3>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td><label for="marca-modulo">Marca del Módulo:</label></td>
+                    </tr>
+                    <tr>
+                        <td><input id="marca-modulo" type="text" /></td>
+                    </tr>
+                    <tr>
+                        <td><label for="potencia-modulo">Potencia Nominal de Salida(W):</label></td>
+                    </tr>
+                    <tr>
+                        <td><input id="potencia-modulo" type="text" /></td>
+                    </tr>
+                    <tr>
+                        <td><label for="modulos-utilizar">Inversores a utilizar:</label></td>
+                    </tr>
+                    <tr>
+                        <td><input id="modulos-utilizar" type="text" /></td>
+                    </tr>
+                </table>
+            </div>            
+        </div>
+        <div class="buttons">
+            <button>Guardar</button>
+            <button class="pdf">PDF</button>
+        </div>
+        </div>
+    </main>
+</body>
+
+</html>

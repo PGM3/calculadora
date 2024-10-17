@@ -74,6 +74,7 @@ main {
   margin: 0; /* eliminar margen por defecto de h1 */
 }
 
+
 .contenedor-principal {
   display: flex;
   flex-wrap: wrap;
@@ -114,18 +115,21 @@ table {
   border-collapse: collapse;
 }
 
-th, td {
+th {/*EL TITULO DE CADA CAMPO DE LA TABLA*/
+  text-align: center;
+  padding-bottom: 1.5em;
+  background-color: #fff;
+}
+
+td {/*LOS CAMPOS QUE SE VAN A LLENAR*/
   padding-bottom: 2em;
   /*border-bottom: 1px solid #ddd;*/
   text-align: center;
 }
 
-th {
-  background-color: #fff;
-}
-
 .seccion-ubicacion {
   width: 400px;
+  height: 400px;
   background-color: #ffffff;
   padding-left: 20px;
   border-radius: 20px;
@@ -136,19 +140,21 @@ th {
 }
 
 .input-ubicacion {
-  margin-bottom: 1em;
-  padding-bottom: 0.8em;
+  font-weight: 14px;
+  height: 40px;
+  padding-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .input-ubicacion label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 
-.input-ubicacion input {
-  width: 350px;
-  height: 15px;
-  padding: 10px;
+.input-ubicacion select {
+  font-weight: 14px;
+  width: 225px;
+  height: 40px;
   border: 1px solid #ddd;
   border-radius: 3px;
 }
@@ -160,7 +166,7 @@ th {
 
 .buttons button {
   width: 150px;
-  padding: 10px 20px;
+  padding: 20px 20px;
   margin: 0 30px;
   color: rgb(0, 0, 0);
   border: none;
@@ -181,7 +187,7 @@ th {
 
 
 .cancelar{
-  background-color: #9c9b9b;
+  background-color: #a1a0a0;
 }
 
 .cancelar:hover {
@@ -196,4 +202,133 @@ footer {
   color: white;
   padding: 1em 0;
   text-align: center;
+}
+
+
+
+/*SEGUNDA VENTANA*/
+.seccion-tamano {
+  border-radius: 10px;
+  padding: 20px;
+  width: 300px;
+  height: 150px;
+  background-color: #FFA500;
+  border-color: #FFA500;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.seccion-tamano input{
+  width: 95%;
+  padding: 6px;
+  margin-top: 10px; /* Mantener separación bajo 5px */
+  border: 1px solid #000;
+  border-radius: 5px;
+}
+
+.buttons {
+  text-align: right;
+  margin-right: 120px;
+}
+
+.buttons button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.buttons button.pdf {
+  background-color: #FFA500;
+  margin-left: 60px;
+}
+
+.seccion-promedios {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border: 3px solid #168012;
+  border-radius: 10px;
+  padding: 10px;
+  width: 950px;
+}
+
+.tabla-consumo {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.seccion-promedios h3 {
+  justify-content: centers;
+  margin-top: 0;
+}
+
+.tabla-consumo th, .tabla-consumo td {
+  text-align: center;
+  padding: 10px;
+}
+
+.tabla-consumo td input[type="text"] {
+  width: 88%;
+  padding: 5px;
+  border: 1px solid #000000;
+  border-radius: 5px;
+}
+
+.tabla-consumo th h3 {
+  text-align: center;
+  margin: 0 auto;
+  display: block;
+}
+
+/* Ajuste del ancho de ambas secciones */
+.seccion-inversor, .seccion-modulos {
+  width: 500px; /* Asegurar que ambas tienen el mismo ancho */
+  background-color: white;
+  padding: 25px 25px 5px;
+  border-radius: 20px;
+  border: 3px solid #168012;
+  margin-top: 60px;
+  padding-bottom: 30px;
+  justify-items: left;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Asegurar consistencia en la tabla */
+.tabla-inversor, .tabla-modulos {
+  width: 100%; /* Ambas tablas deben tener el mismo ancho */
+  border-collapse: collapse;
+}
+
+/* Alinear los títulos */
+.tabla-inversor h3, .tabla-modulos h3 {
+  text-align: center;
+  margin-bottom: 10px; /* Consistencia en el espaciado del título */
+}
+
+/* Asegurar alineación izquierda de los labels y inputs */
+.tabla-inversor td, .tabla-modulos td {
+  text-align: left;
+  padding-bottom: 10px;
+}
+
+.tabla-inversor label, .tabla-modulos label {
+  display: block;
+  margin-bottom: 4px; /* Consistencia en la separación entre el label y el input */
+  margin-top: 10px;
+}
+
+.tabla-inversor input[type="text"], .tabla-modulos input[type="text"] {
+  width: 88%;
+  padding: 10px;
+  margin-top: 10px; /* Mantener separación bajo 5px */
+  border: 1px solid #000;
+  border-radius: 5px;
 }

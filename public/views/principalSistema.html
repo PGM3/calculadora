@@ -76,7 +76,7 @@
                 </div>
             </div>
             <div class="UBICACION">
-                <div class="seccion-ubicacion">
+                <div colspan="2" class="seccion-ubicacion">
                     <h2>INFORMACIÓN DE <br> LA UBICACIÓN</h2>
                     <div class="input-ubicacion">
                         <label for="ubicacion">Ubicación del Sitio:</label>
@@ -84,7 +84,11 @@
                     </div>
                     <div class="input-ubicacion">
                         <label for="propiedad">Tipo de Propiedad:</label>
-                        <input type="text" id="propiedad">
+                        <select id="propiedad" name="tipo_propiedad">
+                            <option value="residencia">Residencial</option>
+                            <option value="comercio">Comercio</option>
+                            <option value="industria">Industria</option>
+                        </select>
                     </div>
                     <div class="input-ubicacion">
                         <label for="radiacion">Radiación Diaria del Sitio:</label>
@@ -100,7 +104,7 @@
     </main>
     <footer>
         <div class="container">
-            <p>&copy; 2023 T-SOLAR MÉXICO</p>
+            <p>&copy; 2024 TECNOLOGÍA SOLAR SOLAR MÉXICO</p>
         </div>
     </footer>
 </body>
