@@ -13,7 +13,7 @@
   "author": "Pamela Guadalupe Ramirez Magaña",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.19.2",
+    "express": "^4.21.1",
     "mysql2": "^3.11.0",
     "pug": "^3.0.3"
   }
