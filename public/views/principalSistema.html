@@ -11,7 +11,7 @@
 <body>
     <header>
         <div class="nav-bar">
-            <a href="#" class="logo"><img src="Images/LogoTSolar.jpg" alt="Logo"></a>
+            <a href="principalSistema.html" class="logo"><img src="Images/LogoTSolar.jpg" alt="Logo"></a>
             <button class="ic--baseline-home">
             </button>
             <h1>CALCULADORA DE <br> SISTEMAS FOTOVOLTAICOS</h1>
@@ -37,39 +37,39 @@
                         <tbody>
                             <tr>
                                 <td>Fecha del Primer Bimestre:</td>
-                                <td><input type="date"></td>
-                                <td><input type="date"></td>
-                                <td><input class="consumos" type="number"></td>
+                                <td><input id="iniPrimero" type="date"></td>
+                                <td><input id="finPrimero" type="date"></td>
+                                <td><input id="cprimero" class="consumos" type="number"></td>
                             </tr>
                             <tr>
                                 <td>Fecha del Segundo Bimestre:</td>
-                                <td><input type="date"></td>
-                                <td><input type="date"></td>
-                                <td><input class="consumos" type="number"></td>
+                                <td><input id="iniSegundo" type="date"></td>
+                                <td><input id="finSegundo" type="date"></td>
+                                <td><input id="cSegundo" class="consumos" type="number"></td>
                             </tr>
                             <tr>
                                 <td>Fecha del Tercer Bimestre:</td>
-                                <td><input type="date"></td>
-                                <td><input type="date"></td>
-                                <td><input class="consumos" type="number"></td>
+                                <td><input id="iniTercero" type="date"></td>
+                                <td><input id="finTercero" type="date"></td>
+                                <td><input id="cTercero" class="consumos" type="number"></td>
                             </tr>
                             <tr>
                                 <td>Fecha del Cuarto Bimestre:</td>
-                                <td><input type="date"></td>
-                                <td><input type="date"></td>
-                                <td><input class="consumos" type="number"></td>
+                                <td><input id="iniCuarto" type="date"></td>
+                                <td><input id="finCuarto" type="date"></td>
+                                <td><input id="cCuarto" class="consumos" type="number"></td>
                             </tr>
                             <tr>
                                 <td>Fecha del Quinto Bimestre:</td>
-                                <td><input type="date"></td>
-                                <td><input type="date"></td>
-                                <td><input class="consumos" type="number"></td>
+                                <td><input id="iniQuinto" type="date"></td>
+                                <td><input id="finQuinto" type="date"></td>
+                                <td><input id="cQuinto" class="consumos" type="number"></td>
                             </tr>
                             <tr>
                                 <td>Fecha del Sexto Bimestre:</td>
-                                <td><input type="date"></td>
-                                <td><input type="date"></td>
-                                <td><input class="consumos" type="number"></td>
+                                <td><input id="iniSexto" type="date"></td>
+                                <td><input id="finSexto" type="date"></td>
+                                <td><input id="cSexto" class="consumos" type="number"></td>
                             </tr>
                         </tbody>
                     </table>
@@ -108,8 +108,7 @@
         </div>
     </footer>
     <script src="src/controllers/acciones.js"></script> 
-</body>
-
+    <script src="src/controllers/formulas.js"></script> 
 </body>
 
 </html>

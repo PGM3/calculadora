@@ -11,7 +11,7 @@
 <body>
     <header>
         <div class="nav-bar">
-            <a href="#" class="logo"><img src="Images/LogoTSolar.jpg" alt="Logo"></a>
+            <a href="principalSistema.html" class="logo"><img src="Images/LogoTSolar.jpg" alt="Logo"></a>
             <button class="ic--baseline-home"></button>
             <h1>CALCULADORA DE <br> SISTEMAS FOTOVOLTAICOS</h1>
         </div>
@@ -103,6 +103,22 @@
         </div>
         </div>
     </main>
+
+    <script src="src/controllers/acciones.js"></script> 
+    <script src="src/controllers/formulas.js"></script> 
+    
+    <script>
+        // Recuperar valores de localStorage
+        const promedioDiario = localStorage.getItem('promedioDiario');
+        const promedioMensual = localStorage.getItem('promedioMensual');
+        const promedioAnual = localStorage.getItem('promedioAnual');
+
+        // Mostrar valores en los inputs
+        document.getElementById('promedio-diario').value = promedioDiario;
+        document.getElementById('promedio-mensual').value = promedioMensual;
+        document.getElementById('promedio-anual').value = promedioAnual;
+    </script>
+
 </body>
 
 </html>
