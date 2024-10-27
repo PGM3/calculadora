@@ -1,18 +1,31 @@
-let mysql = require("mysql2");
+const mysql = require('mysql2');
 
-let conexion = mysql.createConnection({
-        host: 'localhost',
-        database: "calculadorasfv",
-        user: 'root',
-        password: ''
- });
+const conexion = mysql.createConnection({
+    host: 'localhost',
+    database: "calculadorasfv",
+    user: 'root',
+    password: ''
+});
 
- conexion.connect(function(error){
-    if(error){
-        throw error;
-    }else{
-        console.log("Conectado a la base de datos");
+// Conectar a la base de datos
+conexion.connect(error => {
+    if(error) {
+        console.error('Error al conectar a la base de datos:', error);
+        return;
     }
- });
+    console.log('Conectado exitosamente a la base de datos');
+});
 
- conexion.end();
+// Manejar el cierre de conexión cuando la aplicación se cierre
+process.on('SIGINT', () => {
+    conexion.end(err => {
+        if(err) {
+            console.error('Error al cerrar la conexión:', err);
+        }
+        console.log('Conexión a la base de datos cerrada');
+        process.exit();
+    });
+});
+
+// Exportar la conexión
+module.exports = conexion;

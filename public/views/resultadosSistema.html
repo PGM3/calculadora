@@ -103,22 +103,46 @@
         </div>
         </div>
     </main>
-
-    <script src="src/controllers/acciones.js"></script> 
-    <script src="src/controllers/formulas.js"></script> 
-    
+    <script src="src/controllers/conexion.js"></script>
+    <script src="src/controllers/formulas.js"></script>
     <script>
-        // Recuperar valores de localStorage
-        const promedioDiario = localStorage.getItem('promedioDiario');
-        const promedioMensual = localStorage.getItem('promedioMensual');
-        const promedioAnual = localStorage.getItem('promedioAnual');
-
-        // Mostrar valores en los inputs
-        document.getElementById('promedio-diario').value = promedioDiario;
-        document.getElementById('promedio-mensual').value = promedioMensual;
-        document.getElementById('promedio-anual').value = promedioAnual;
+        document.addEventListener('DOMContentLoaded', function() {
+            // Recuperar valores de localStorage
+            const potenciaPico = localStorage.getItem('potenciaPico');
+            const promedioDiario = localStorage.getItem('promedioDiario');
+            const promedioMensual = localStorage.getItem('promedioMensual');
+            const promedioAnual = localStorage.getItem('promedioAnual');
+    
+            // Mostrar valores en los inputs
+            document.getElementById('potencia-pico').value = potenciaPico || '';
+            document.getElementById('promedio-diario').value = promedioDiario || '';
+            document.getElementById('promedio-mensual').value = promedioMensual || '';
+            document.getElementById('promedio-anual').value = promedioAnual || '';
+    
+            //  campos de entrada
+            const potenciaModuloInput = document.getElementById('potencia-modulo');
+            const potenciaInversorInput = document.getElementById('potencia-inversor');
+    
+            //  campos de resultados
+            const modulosUtilizarInput = document.getElementById('modulos-utilizar');
+            const inversoresUtilizarInput = document.getElementById('inversores-utilizar');
+    
+            // calcular componentes
+            function calcularComponentes() {
+                const potenciaModulo = parseFloat(potenciaModuloInput.value) || 0;
+                const potenciaInversor = parseFloat(potenciaInversorInput.value) || 0;
+    
+                const { numeroModulos, numeroInversores } = calcularComponentes(potenciaPico, potenciaModulo, potenciaInversor);
+    
+                // Mostrar resultados
+                modulosUtilizarInput.value = numeroModulos || '';
+                inversoresUtilizarInput.value = numeroInversores || '';
+            }
+    
+            // calcular cuando cambian los valores de potencia
+            potenciaModuloInput.addEventListener('input', calcularComponentes);
+            potenciaInversorInput.addEventListener('input', calcularComponentes);
+        });
     </script>
-
 </body>
-
 </html>
