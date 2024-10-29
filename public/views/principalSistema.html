@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Sistemas Fotovoltaicos</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/principal.css">
 </head>
 
 <body>
@@ -18,10 +18,10 @@
         </div>
     </header>
     <main>
+        <div class="titulo">
+            <h1>CALCULADORA DE SISTEMAS <br> FOTOVOLTAICOS INTERCONECTADOS</h1>
+        </div>
         <div class="contenedor-principal">
-            <div class="titulo">
-                <h1>CALCULADORA DE SISTEMAS <br> FOTOVOLTAICOS INTERCONECTADOS</h1>
-            </div>
             <div class="CONSUMO">
                 <div class="seccion-consumo">
                     <h2>DETALLES DE CONSUMO ENERGÉTICO</h2>
@@ -80,7 +80,7 @@
                     <h2>INFORMACIÓN DE <br> LA UBICACIÓN</h2>
                     <div class="input-ubicacion">
                         <label for="ubicacion">Ubicación del Sitio:</label>
-                        <input type="text" id="ubicacion">
+                        <input type="text" id="ubicacion" required>
                     </div>
                     <div class="input-ubicacion">
                         <label for="propiedad">Tipo de Propiedad:</label>
@@ -92,7 +92,7 @@
                     </div>
                     <div class="input-ubicacion">
                         <label for="radiacion">Radiación Diaria del Sitio:</label>
-                        <input type="number" id="radiacion">
+                        <input type="number" id="radiacion" min="0" required>
                     </div>
                 </div>
                 <div class="buttons">
@@ -104,10 +104,35 @@
     </main>
     <footer>
         <div class="container">
-            <p>&copy; 2024 TECNOLOGÍA SOLAR SOLAR MÉXICO</p>
+            <p>&copy; 2024 TECNOLOGÍA SOLAR DE MÉXICO S.A. DE C.V.</p>
         </div>
     </footer>
     <script src="src/controllers/conexion.js"></script>  
     <script src="src/controllers/formulas.js"></script>  
+    <script src="src/controllers/validaciones.js"></script>  
+    
+<script>
+    // Al hacer clic en el botón "Continuar"
+    document.querySelector('.continuar').addEventListener('click', function () {
+        // Validar datos de ubicación
+        if (validarDatosUbicacion()) {
+            // Obtener los valores de los campos
+            const ubicacion = document.getElementById('ubicacion').value;
+            const tipoPropiedad = document.getElementById('propiedad').value;
+            const radiacionDiaria = parseFloat(document.getElementById('radiacion').value) || 0;
+
+            // Guardar en localStorage
+            localStorage.setItem('ubicacion', ubicacion);
+            localStorage.setItem('tipoPropiedad', tipoPropiedad);
+            localStorage.setItem('radiacionDiaria', radiacionDiaria.toFixed(4));
+
+            // Validar datos de consumo antes de continuar
+            if (validarDatosConsumo()) {
+                // Lógica para continuar a la siguiente página o realizar cálculos
+                window.location.href = '/public/views/resultadosSistema.html'; // O la ruta que corresponda
+            }
+                    }
+    });
+</script>
 </body>
 </html>

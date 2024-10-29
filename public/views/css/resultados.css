@@ -1,0 +1,287 @@
+/* Importación de fuentes */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+/* Estilos generales */
+body {
+  font-family: Poppins;
+  font-size: 16px;
+  margin: 0;
+  background-color: #f4f4f4;
+}
+
+/* Header y navegación (mantener consistencia) */
+header {
+  background-color: #088608;
+  color: #fff;
+  padding: 0.1rem 0;
+}
+
+.nav-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 150px;
+  padding: 0 10px;
+}
+
+.logo {
+  order: 3;
+}
+
+.logo img {
+  height: 90px;
+}
+
+h1 {
+  order: 2;
+  font-size: 32px;
+  text-align: center;
+  flex-grow: 1;
+}
+
+.ic--baseline-home {
+  order: 1;
+  width: 50px;
+  height: 50px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23ffffff' d='M10 20v-6h4v6h5v-8h3L12 3L2 12h3v8z'/%3E%3C/svg%3E") no-repeat center/contain;
+  border: none;
+  cursor: pointer;
+}
+
+.ic--baseline-home:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Contenido principal */
+main {
+  padding: 1.5em;
+  background-color: #ffffff;
+}
+
+
+/* Título */
+.titulo {
+  background-color: #f1c40f;
+  height: 100px;
+  width: 700px;
+  justify-self: center;
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 50px;
+}
+
+.titulo h1 {
+  font-size: 28px;
+  margin: 0;
+}
+
+
+/*seccion principal*/
+.contenedor-principal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 50px;
+    justify-content: center;
+  }
+
+/* Sección de tamaño del sistema */
+.seccion-tamano {
+    border-radius: 10px;
+    padding: 10px;
+    width: 310px;
+    height: 150px;
+    background-color: #FFA500;
+    border-color: #FFA500;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.53);
+    display: flex; /* Agregar display flex */
+    flex-direction: column; /* Alinear los elementos en columna */
+    justify-content: center; /* Centrar verticalmente */
+    align-items: center; /* Centrar horizontalmente */
+  }
+ 
+  .seccion-tamano h3{
+    margin-top: -10px;
+  }
+
+.seccion-tamano input {
+  width: 90%;
+  padding: 6px;
+  margin-top: 20px;
+  border: 1px solid #000;
+  border-radius: 5px;
+}
+
+ /*Seccion instruccion*/
+ .instruction-box {
+    background-color: #d4b2d051;
+    border-left: 10px solid #9c1c9e;
+    padding: 15px;
+    margin-left: 60px;
+    margin-right: 60px;
+    font-size: 16px;
+    color: #181717;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.532);
+}
+
+.icon-info {
+    color: #9c1c9e;
+    font-size: 24px;
+    font-weight: 600;
+    padding-right: 10px;
+}
+
+/* Sección de promedios */
+.seccion-promedios {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border: 3px solid #168012;
+  border-radius: 10px;
+  padding: 10px;
+  width: 800px;
+}
+
+.tabla-consumo {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.seccion-promedios h3 {
+  justify-content: center;
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 20px;
+}
+
+.tabla-consumo th, 
+.tabla-consumo td {
+  text-align: center;
+  padding: 10px;
+}
+
+.tabla-consumo td input[type="text"] {
+  width: 88%;
+  padding: 5px;
+  border: 1px solid #000000;
+  border-radius: 5px;
+}
+
+/* Secciones de inversor y módulos */
+.seccion-inversor,
+.seccion-modulos {
+  width: 500px; /* Asegúrate de que ambas secciones tengan el mismo ancho */
+  background-color: white;
+  padding: 25px 25px 5px; /* Mantén el mismo padding para ambas */
+  border-radius: 20px;
+  border: 3px solid #168012;
+  margin-top: 40px;
+  padding-bottom: 30px; /* Consistente en ambas secciones */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Estilos para los títulos en las secciones de inversor y módulos */
+.seccion-inversor h3,
+.seccion-modulos h3 {
+  font-size: 24px; /* Ajusta el tamaño de la letra */
+  margin-top: 0; /* Elimina el margen superior */
+  margin-bottom: 10px; /* Ajusta el margen inferior si es necesario */
+  text-align: center; /* Centra el texto */
+}
+
+.tabla-inversor,
+.tabla-modulos {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla-inversor h3,
+.tabla-modulos h3 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.tabla-inversor td,
+.tabla-modulos td {
+  text-align: left;
+  padding-bottom: 5px;
+}
+
+.tabla-inversor label,
+.tabla-modulos label {
+  display: block;
+  margin-bottom: 4px;
+  margin-top: 10px;
+}
+
+.tabla-inversor input[type="text"],
+.tabla-modulos input[type="text"] {
+  width: 95%;
+  padding: 10px;
+  margin-top: 10px;
+  border: 1px solid #000;
+  border-radius: 5px;
+}
+
+.buttons {
+  display: flex; /* Usar flexbox para alinear los botones en fila */
+  justify-content: flex-end; /* Alinear los botones al final (derecha) */
+  padding-right: 100px; /* Espacio a la derecha */
+  margin-top: 35px; /* Espacio superior para separar de la sección de módulos */
+}
+
+.buttons button {
+  padding: 16px; /* Ajusta el padding para que sean más pequeños */
+  font-size: 16px; /* Cambia el tamaño de la fuente */
+  font-weight: bold;
+  width: 210px; /* Ajusta el ancho del botón */
+  height: 42px; /* Ajusta la altura del botón */
+  color: rgb(0, 0, 0); /* Color del texto */
+  border: none; /* Sin borde */
+  border-radius: 20px; /* Bordes redondeados */
+  cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+  margin-left: 20px; /* Espacio entre los botones */
+  text-align: center; /* Centra el texto dentro del botón */
+  display: flex; /* Cambia a flexbox para centrar contenido */
+  align-items: center; /* Centra verticalmente el contenido */
+  justify-content: center; /* Centra horizontalmente el contenido */
+}
+
+  .guardar {
+    margin-right: 48px;
+    background-color: #14a218;
+  }
+  
+  .guardar:hover {
+    background-color: #14c0cc;
+    border: 2px solid;
+    border-color: #030003;
+  }
+  
+  .pdf {
+    background-color: #FF9900;
+  }
+  
+  .pdf:hover {
+    background-color: #ac1313;
+    border: 2px solid;
+    border-color: #030003;
+  }
+
+/* Footer */
+footer {
+  background-color: #333;
+  color: white;
+  padding: 1em 0;
+  text-align: center;
+}

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Sistemas Fotovoltaicos</title>
+    <link rel="stylesheet" href="css/inicio.css">
+</head>
+
+<body>
+    <header>
+        <div class="nav-bar">
+            <a href="principalSistema.html" class="logo"><img src="Images/LogoTSolar.jpg" alt="Logo"></a>
+            <button class="ic--baseline-home">
+            </button>
+            <h1>CALCULADORA DE <br> SISTEMAS FOTOVOLTAICOS</h1>
+        </div>
+    </header>
+    <main>
+        <div class="contenedor-principal"></div>
+        <div class="seccion-saludo">
+            <h1>¡Bienvenido!</h1>
+            <h2>¿Que tipo de sistema necesitas calcular hoy?</h2>
+            <table class="tabla-saludo">
+                <tr>
+                    <td><button class="SFVI" type="button" onclick="seleccionarTipoSistema('Interconectado')" id="btnInterconectado">SISTEMAS FOTOVOLTAICOS INTERCONECTADOS</button></td>
+                    <td><button class="SFVA" type="button" onclick="seleccionarTipoSistema('Autonomo')" id="btnAutonomo" disabled>SISTEMAS FOTOVOLTAICOS AUTONOMOS</button></td>
+                    <td><button class="SFVH" type="button" onclick="seleccionarTipoSistema('Hibrido')" id="btnHibrido" disabled>SISTEMAS FOTOVOLTAICOS HIBRIDOS</button></td>
+                </tr>
+                
+            </table>
+        </div>
+        </div>
+          <div class="seccion-registros">
+            <div class="tabla-registros">
+                <h1>GENERADOS RECIENTEMENTE</h1>
+                <table>
+                    <thead>
+                        <tr>
+                            <th id="campo-nombre">Nombre</th>
+                            <th id="campo-tipo">Tipo</th>
+                            <th id="campo-acciones">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                       <!-- AQUI APARECERA CADA REGISTRO -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 TECNOLOGÍA SOLAR DE MÉXICO S.A. DE C.V.</p>
+        </div>
+    </footer>
+
+    <script>
+        function seleccionarTipoSistema(tipo) {
+            // // Mostrar alerta para verificar el tipo seleccionado
+            // alert('Has seleccionado: ' + tipo);
+            
+            // Guardar el tipo en localStorage
+            localStorage.setItem('tipoSistema', tipo);
+            
+            // Verificar que se guardó
+            const tipoGuardado = localStorage.getItem('tipoSistema');
+            // console.log('Tipo guardado en localStorage:', tipoGuardado);
+            
+            // Redirigir a principalSistema.html
+            window.location.href = 'principalSistema.html';
+        }
+    </script>
+
+</body>
+</html>

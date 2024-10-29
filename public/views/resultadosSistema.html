@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Sistemas Fotovoltaicos</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/resultados.css">
 </head>
 
 <body>
@@ -17,6 +17,9 @@
         </div>
     </header>
     <main>
+        <div class="titulo">
+            <h1>RESULTADOS DEL SISTEMA <br> FOTOVOLTAICO</h1>
+        </div>
         <div class="contenedor-principal">
             <div class="seccion-tamano">
                 <h3>TAMAÑO DEL SISTEMA</h3>
@@ -40,6 +43,12 @@
                     </tr>
                 </table>
             </div>
+        </div>
+        <br><br>
+        <div class="instruction-box">
+            <i class="icon-info">&#9432;</i>
+            <span>Para calcular automáticamente el número de módulos e inversores necesarios, ingrese la marca y
+                potencia nominal de salida del módulo y el inversor.</span>
         </div>
         <div class="contenedor-principal">
             <div class="seccion-inversor">
@@ -95,54 +104,94 @@
                         <td><input id="modulos-utilizar" type="text" /></td>
                     </tr>
                 </table>
-            </div>            
+            </div>
         </div>
         <div class="buttons">
-            <button>Guardar</button>
+            <button class="guardar">Guardar</button>
             <button class="pdf">PDF</button>
         </div>
         </div>
     </main>
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 TECNOLOGÍA SOLAR DE MÉXICO S.A. DE C.V.</p>
+        </div>
+    </footer>
     <script src="src/controllers/conexion.js"></script>
     <script src="src/controllers/formulas.js"></script>
+
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Recuperar valores de localStorage
-            const potenciaPico = localStorage.getItem('potenciaPico');
+            const potenciaPico = parseFloat(localStorage.getItem('potenciaPico')) || 0;
             const promedioDiario = localStorage.getItem('promedioDiario');
             const promedioMensual = localStorage.getItem('promedioMensual');
             const promedioAnual = localStorage.getItem('promedioAnual');
-    
+
+            // Función para calcular componentes
+            function calcularComponentes(potenciaPico, potenciaModulo, potenciaInversor) {
+                if (!potenciaPico || !potenciaModulo || !potenciaInversor) {
+                    return { numeroModulos: 0, numeroInversores: 0 };
+                }
+
+                const numeroModulos = Math.ceil(potenciaPico * 1000 / potenciaModulo);
+                const numeroInversores = Math.ceil(potenciaPico / potenciaInversor);
+
+                return { numeroModulos, numeroInversores };
+            }
+
+            // Función para actualizar cálculos y almacenar resultados
+            function actualizarComponentes() {
+                const potenciaModulo = parseFloat(document.getElementById('potencia-modulo').value) || 0;
+                const potenciaInversor = parseFloat(document.getElementById('potencia-inversor').value) || 0;
+
+                const resultado = calcularComponentes(potenciaPico, potenciaModulo, potenciaInversor);
+
+                document.getElementById('modulos-utilizar').value = resultado.numeroModulos;
+                document.getElementById('inversores-utilizar').value = resultado.numeroInversores;
+
+                localStorage.setItem('modulosUtilizar', resultado.numeroModulos);
+                localStorage.setItem('inversoresUtilizar', resultado.numeroInversores);
+            }
+
+            // Recuperar y asignar valores iniciales
+            document.getElementById('marca-modulo').value = localStorage.getItem('marcaModulo') || '';
+            document.getElementById('potencia-modulo').value = localStorage.getItem('potenciaModulo') || '';
+            document.getElementById('modulos-utilizar').value = localStorage.getItem('modulosUtilizar') || '';
+            document.getElementById('marca-inversor').value = localStorage.getItem('marcaInversor') || '';
+            document.getElementById('potencia-inversor').value = localStorage.getItem('potenciaInversor') || '';
+            document.getElementById('inversores-utilizar').value = localStorage.getItem('inversoresUtilizar') || '';
+
             // Mostrar valores en los inputs
             document.getElementById('potencia-pico').value = potenciaPico || '';
             document.getElementById('promedio-diario').value = promedioDiario || '';
             document.getElementById('promedio-mensual').value = promedioMensual || '';
             document.getElementById('promedio-anual').value = promedioAnual || '';
-    
-            //  campos de entrada
-            const potenciaModuloInput = document.getElementById('potencia-modulo');
-            const potenciaInversorInput = document.getElementById('potencia-inversor');
-    
-            //  campos de resultados
-            const modulosUtilizarInput = document.getElementById('modulos-utilizar');
-            const inversoresUtilizarInput = document.getElementById('inversores-utilizar');
-    
-            // calcular componentes
-            function calcularComponentes() {
-                const potenciaModulo = parseFloat(potenciaModuloInput.value) || 0;
-                const potenciaInversor = parseFloat(potenciaInversorInput.value) || 0;
-    
-                const { numeroModulos, numeroInversores } = calcularComponentes(potenciaPico, potenciaModulo, potenciaInversor);
-    
-                // Mostrar resultados
-                modulosUtilizarInput.value = numeroModulos || '';
-                inversoresUtilizarInput.value = numeroInversores || '';
-            }
-    
-            // calcular cuando cambian los valores de potencia
-            potenciaModuloInput.addEventListener('input', calcularComponentes);
-            potenciaInversorInput.addEventListener('input', calcularComponentes);
+
+            // Event listeners para almacenamiento y actualización
+            document.getElementById('marca-modulo').addEventListener('input', function () {
+                localStorage.setItem('marcaModulo', this.value);
+            });
+
+            document.getElementById('potencia-modulo').addEventListener('input', function () {
+                localStorage.setItem('potenciaModulo', this.value);
+                actualizarComponentes(); // Actualizar cálculos cuando cambia la potencia del módulo
+            });
+
+            document.getElementById('marca-inversor').addEventListener('input', function () {
+                localStorage.setItem('marcaInversor', this.value);
+            });
+
+            document.getElementById('potencia-inversor').addEventListener('input', function () {
+                localStorage.setItem('potenciaInversor', this.value);
+                actualizarComponentes(); // Actualizar cálculos cuando cambia la potencia del inversor
+            });
+
+            // Realizar cálculo inicial
+            actualizarComponentes();
         });
     </script>
+
 </body>
+
 </html>

@@ -1,0 +1,226 @@
+/* Importación de fuentes */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+/* Estilos generales */
+body {
+  font-family: Poppins;
+  font-size: 16px;
+  margin: 0;
+  background-color: #f4f4f4;
+}
+
+/* Header y navegación */
+header {
+  background-color: #088608;
+  color: #fff;
+  padding: 0.1rem 0;
+}
+
+.nav-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 150px;
+  padding: 0 10px;
+}
+
+.logo {
+  order: 3;
+}
+
+.logo img {
+  height: 90px;
+}
+
+h1 {
+  order: 2;
+  font-size: 32px;
+  text-align: center;
+  flex-grow: 1;
+}
+
+.ic--baseline-home {
+  order: 1;
+  width: 50px;
+  height: 50px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23ffffff' d='M10 20v-6h4v6h5v-8h3L12 3L2 12h3v8z'/%3E%3C/svg%3E") no-repeat center/contain;
+  border: none;
+  cursor: pointer;
+}
+
+.ic--baseline-home:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Contenido principal */
+main {
+  padding: 1.5em;
+  background-color: #ffffff;
+}
+
+/* Título */
+.titulo {
+  background-color: #f1c40f;
+  height: 100px;
+  width: 700px;
+  justify-self: center;
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.titulo h1 {
+  font-size: 28px;
+  margin: 0;
+}
+
+/*seccion principal*/
+.contenedor-principal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 45px;
+  justify-content: center;
+}
+
+
+/* Sección de consumo */
+.seccion-consumo {
+  margin-top: 20px;
+  width: 740px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 20px;
+  border: 3px solid #168012;
+}
+
+.seccion-consumo h2 {
+  font-size: 26px;
+  text-align: center;
+}
+
+.consumos[type="number"] {
+  width: 167px;
+}
+
+.seccion-consumo input {
+  width: 88%;
+}
+
+/* Tabla */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  text-align: center;
+  padding-bottom: 1.5em;
+  background-color: #fff;
+}
+
+td {
+  padding-bottom: 2em;
+  text-align: center;
+}
+
+/* Sección de ubicación */
+.seccion-ubicacion {
+  width: 400px;
+  height: 400px;
+  background-color: #ffffff;
+  padding: 20px; /* Espaciado en todos los lados */
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Alinear los elementos al inicio */
+  border: 3px solid #000000;
+  margin-top: 19px;
+}
+
+.seccion-ubicacion h2 {
+  text-align: center; /* Centra el título */
+  margin-bottom: 20px; /* Espacio debajo del título */
+}
+
+.input-ubicacion {
+  flex: 1; /* Permite que el contenedor ocupe el espacio disponible */
+  margin-bottom: 15px; /* Espacio entre los campos */
+}
+
+.input-ubicacion label {
+  display: block; /* Hace que la etiqueta ocupe toda la línea */
+  margin-bottom: 5px; /* Espacio entre la etiqueta y el campo */
+}
+
+.input-ubicacion input {
+  font-weight: 14px;
+  width: calc(100% - 10px); /* Ocupa todo el ancho disponible con un pequeño margen */
+  height: 25px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  padding: 5px; /* Espaciado interno */
+}
+
+.input-ubicacion select {
+  font-weight: 14px;
+  width: calc(100% - -1px); /* Ocupa todo el ancho disponible con un pequeño margen */
+  height: 40px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  padding: 5px; /* Espaciado interno */
+}
+
+.buttons {
+  display: flex; /* Usar flexbox para alinear los botones en fila */
+  justify-content: flex-end; /* Alinear los botones al final (derecha) */
+  padding-right: 30px; /* Espacio a la derecha */
+  margin-top: 35px; /* Espacio superior para separar de la sección de módulos */
+}
+
+.buttons button {
+  padding: 10px; /* Ajusta el padding para que sean más pequeños */
+  font-size: 16px; /* Cambia el tamaño de la fuente */
+  font-weight: bold;
+  width: 170px; /* Ajusta el ancho del botón */
+  height: 42px; /* Ajusta la altura del botón */
+  color: rgb(0, 0, 0); /* Color del texto */
+  border: none; /* Sin borde */
+  border-radius: 20px; /* Bordes redondeados */
+  cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+  margin-left: 35px; /* Espacio entre los botones */
+  text-align: center; /* Centra el texto dentro del botón */
+  display: flex; /* Cambia a flexbox para centrar contenido */
+  align-items: center; /* Centra verticalmente el contenido */
+  justify-content: center; /* Centra horizontalmente el contenido */
+}
+
+.continuar {
+  background-color: #18be1e;
+}
+
+.continuar:hover {
+  background-color: #FF9900;
+  border: 2px solid;
+  border-color: #030003;
+}
+
+.cancelar {
+  background-color: #a1a0a0;
+}
+
+.cancelar:hover {
+  background-color: #7A288A;
+  border: 2px solid;
+  border-color: #030003;
+}
+
+/* Footer */
+footer {
+  background-color: #333;
+  color: white;
+  padding: 1em 0;
+  text-align: center;
+}
