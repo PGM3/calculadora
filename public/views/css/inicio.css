@@ -200,8 +200,6 @@ th {
 }
 
 
-
-
 /*texto que saldra para cada boton*/
 .texto {
   position: absolute;
@@ -213,7 +211,8 @@ th {
 }
 
 .acciones button {
-  margin: 0 5px;
+  align-content: center;
+  margin: 0 5%;
   padding: 5px 10px;
   border: none;
   border-radius: 5px;
@@ -221,20 +220,25 @@ th {
 }
 
 .editar {
-  background-color: #4caf50; /* Verde */
+  background-color: rgb(23, 19, 219); /* Verde */
   color: white;
 }
 
 .eliminar {
-  background-color: #f44336; /* Rojo */
+  background-color: #168c09; /* Rojo */
+  color: white;
+}
+
+.pdf{
+  background-color: #750cb2;
   color: white;
 }
 
 /*BOTON DESCARGAR*/
 .ph--file-pdf-bold {
     display: inline-block;
-    width: 1em;
-    height: 1em;
+    width: 1.1em;
+    height: 1.1em;
     --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cpath fill='%23000' d='M200 164v8h12a12 12 0 0 1 0 24h-12v12a12 12 0 0 1-24 0v-56a12 12 0 0 1 12-12h32a12 12 0 0 1 0 24Zm-108 8a32 32 0 0 1-32 32h-4v4a12 12 0 0 1-24 0v-56a12 12 0 0 1 12-12h16a32 32 0 0 1 32 32m-24 0a8 8 0 0 0-8-8h-4v16h4a8 8 0 0 0 8-8m100 8a40 40 0 0 1-40 40h-16a12 12 0 0 1-12-12v-56a12 12 0 0 1 12-12h16a40 40 0 0 1 40 40m-24 0a16 16 0 0 0-16-16h-4v32h4a16 16 0 0 0 16-16M36 108V40a20 20 0 0 1 20-20h96a12 12 0 0 1 8.49 3.52l56 56A12 12 0 0 1 220 88v20a12 12 0 0 1-24 0v-4h-48a12 12 0 0 1-12-12V44H60v64a12 12 0 0 1-24 0m124-51v23h23Z'/%3E%3C/svg%3E");
     background-color: currentColor;
     -webkit-mask-image: var(--svg);
@@ -248,8 +252,8 @@ th {
 /* BOTON EDITAR */
 .ph--note-pencil-bold {
     display: inline-block;
-    width: 1em;
-    height: 1em;
+    width: 1.1em;
+    height: 1.1em;
     --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cpath fill='%23000' d='m232.49 55.51l-32-32a12 12 0 0 0-17 0l-96 96A12 12 0 0 0 84 128v32a12 12 0 0 0 12 12h32a12 12 0 0 0 8.49-3.51l96-96a12 12 0 0 0 0-16.98M192 49l15 15l-11 11l-15-15Zm-69 99h-15v-15l56-56l15 15Zm105-7.43V208a20 20 0 0 1-20 20H48a20 20 0 0 1-20-20V48a20 20 0 0 1 20-20h67.43a12 12 0 0 1 0 24H52v152h152v-63.43a12 12 0 0 1 24 0'/%3E%3C/svg%3E");
     background-color: currentColor;
     -webkit-mask-image: var(--svg);
@@ -264,8 +268,8 @@ th {
 /* BOTON ELIMINAR */
 .ph--trash-bold {
   display: inline-block;
-  width: 1em;
-  height: 1em;
+  width: 1.1em;
+  height: 1.1em;
   --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cpath fill='%23000' d='M216 48h-36V36a28 28 0 0 0-28-28h-48a28 28 0 0 0-28 28v12H40a12 12 0 0 0 0 24h4v136a20 20 0 0 0 20 20h128a20 20 0 0 0 20-20V72h4a12 12 0 0 0 0-24M100 36a4 4 0 0 1 4-4h48a4 4 0 0 1 4 4v12h-56Zm88 168H68V72h120Zm-72-100v64a12 12 0 0 1-24 0v-64a12 12 0 0 1 24 0m48 0v64a12 12 0 0 1-24 0v-64a12 12 0 0 1 24 0'/%3E%3C/svg%3E");
   background-color: currentColor;
   -webkit-mask-image: var(--svg);
@@ -276,6 +280,32 @@ th {
   mask-size: 100% 100%;
 }
 
+/* Estilo para error */
+.input-error {
+  border: 1px solid red;
+  background-color: #ffe6e6;
+}
+
+/* Tooltip se muestra cuando pasa el ratón sobre el campo */
+.input-error[title] {
+  position: relative;
+  cursor: pointer;
+}
+
+.input-error[title]:hover::after {
+  content: attr(title); /* Muestra el contenido del atributo title */
+  position: absolute;
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 5px;
+  border-radius: 4px;
+  top: -35px; /* Ajusta la posición del tooltip */
+  left: 0;
+  white-space: nowrap;
+  font-size: 12px;
+  border: 1px solid #f5c6cb;
+  z-index: 1;
+}
 
 /* Footer */
 footer {

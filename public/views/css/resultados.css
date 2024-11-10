@@ -278,6 +278,33 @@ main {
     border-color: #030003;
   }
 
+/* Estilo para error */
+.input-error {
+  border: 1px solid red;
+  background-color: #ffe6e6;
+}
+
+/* Tooltip se muestra cuando pasa el ratón sobre el campo */
+.input-error[title] {
+  position: relative;
+  cursor: pointer;
+}
+
+.input-error[title]:hover::after {
+  content: attr(title); /* Muestra el contenido del atributo title */
+  position: absolute;
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 5px;
+  border-radius: 4px;
+  top: -35px; /* Ajusta la posición del tooltip */
+  left: 0;
+  white-space: nowrap;
+  font-size: 12px;
+  border: 1px solid #f5c6cb;
+  z-index: 1;
+}
+
 /* Footer */
 footer {
   background-color: #333;

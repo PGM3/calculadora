@@ -84,15 +84,16 @@
                     </div>
                     <div class="input-ubicacion">
                         <label for="propiedad">Tipo de Propiedad:</label>
-                        <select id="propiedad" name="tipo_propiedad">
-                            <option value="residencia">Residencial</option>
-                            <option value="comercio">Comercio</option>
-                            <option value="industria">Industria</option>
+                        <select id="propiedad">
+                            <option value="">Seleccione una opción</option>
+                            <option value="Residencial">Residencial</option>
+                            <option value="Comercial">Comercial</option>
+                            <option value="Industrial">Industrial</option>
                         </select>
                     </div>
                     <div class="input-ubicacion">
-                        <label for="radiacion">Radiación Diaria del Sitio:</label>
-                        <input type="number" id="radiacion" min="0" required>
+                        <label for="horas_solares">Horas Solares Diarias del Sitio:</label>
+                        <input type="number" id="horas_solares" min="0" required>
                     </div>
                 </div>
                 <div class="buttons">
@@ -107,32 +108,38 @@
             <p>&copy; 2024 TECNOLOGÍA SOLAR DE MÉXICO S.A. DE C.V.</p>
         </div>
     </footer>
-    <script src="src/controllers/conexion.js"></script>  
-    <script src="src/controllers/formulas.js"></script>  
-    <script src="src/controllers/validaciones.js"></script>  
+    <script src="src/controllers/formulas.js"></script>
+    <script src="src/controllers/validaciones.js"></script>
+
+    <script>
+        document.querySelector('.continuar').addEventListener('click', function () {
+            // Validar datos de ubicación
+            if (validarDatosUbicacion()) {
+                // Obtener valores de los campos
+                const ubicacion = document.getElementById('ubicacion').value;
+                const tipoPropiedad = document.getElementById('propiedad').value;
+                const horasSolares = parseFloat(document.getElementById('horas_solares').value) || 0;
     
-<script>
-    // Al hacer clic en el botón "Continuar"
-    document.querySelector('.continuar').addEventListener('click', function () {
-        // Validar datos de ubicación
-        if (validarDatosUbicacion()) {
-            // Obtener los valores de los campos
-            const ubicacion = document.getElementById('ubicacion').value;
-            const tipoPropiedad = document.getElementById('propiedad').value;
-            const radiacionDiaria = parseFloat(document.getElementById('radiacion').value) || 0;
-
-            // Guardar en localStorage
-            localStorage.setItem('ubicacion', ubicacion);
-            localStorage.setItem('tipoPropiedad', tipoPropiedad);
-            localStorage.setItem('radiacionDiaria', radiacionDiaria.toFixed(4));
-
-            // Validar datos de consumo antes de continuar
-            if (validarDatosConsumo()) {
-                // Lógica para continuar a la siguiente página o realizar cálculos
-                window.location.href = '/public/views/resultadosSistema.html'; // O la ruta que corresponda
+                // Imprimir valores para verificar
+                console.log("Ubicación:", ubicacion);
+                console.log("Tipo de Propiedad:", tipoPropiedad);
+                console.log("Horas Solares Diarias:", horasSolares);
+    
+                // Guardar los datos en el almacenamiento local
+                localStorage.setItem('ubicacion', ubicacion);
+                localStorage.setItem('tipoPropiedad', tipoPropiedad);
+                localStorage.setItem('horasSolares', horasSolares);
+    
+                // Validar datos de consumo antes de continuar
+                if (validarDatosConsumo()) {
+                    // Redirigir a la página de resultados
+                    window.location.href = '/public/views/resultadosSistema.html';
+                }
+            } else {
+                console.log("Validación fallida en datos de ubicación.");
             }
-                    }
-    });
-</script>
+        });
+    </script>  
+    
 </body>
 </html>

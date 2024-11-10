@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Sistemas Fotovoltaicos</title>
     <link rel="stylesheet" href="css/inicio.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -24,27 +25,31 @@
             <h2>¿Que tipo de sistema necesitas calcular hoy?</h2>
             <table class="tabla-saludo">
                 <tr>
-                    <td><button class="SFVI" type="button" onclick="seleccionarTipoSistema('Interconectado')" id="btnInterconectado">SISTEMAS FOTOVOLTAICOS INTERCONECTADOS</button></td>
-                    <td><button class="SFVA" type="button" onclick="seleccionarTipoSistema('Autonomo')" id="btnAutonomo" disabled>SISTEMAS FOTOVOLTAICOS AUTONOMOS</button></td>
-                    <td><button class="SFVH" type="button" onclick="seleccionarTipoSistema('Hibrido')" id="btnHibrido" disabled>SISTEMAS FOTOVOLTAICOS HIBRIDOS</button></td>
+                    <td><button class="SFVI" type="button" onclick="seleccionarTipoSistema('Interconectado')"
+                            id="btnInterconectado">SISTEMAS FOTOVOLTAICOS INTERCONECTADOS</button></td>
+                    <td><button class="SFVA" type="button" onclick="seleccionarTipoSistema('Autonomo')" id="btnAutonomo"
+                            disabled>SISTEMAS FOTOVOLTAICOS AUTONOMOS</button></td>
+                    <td><button class="SFVH" type="button" onclick="seleccionarTipoSistema('Hibrido')" id="btnHibrido"
+                            disabled>SISTEMAS FOTOVOLTAICOS HIBRIDOS</button></td>
                 </tr>
-                
+
             </table>
         </div>
         </div>
-          <div class="seccion-registros">
+        <div class="seccion-registros">
             <div class="tabla-registros">
                 <h1>GENERADOS RECIENTEMENTE</h1>
                 <table>
                     <thead>
                         <tr>
-                            <th id="campo-nombre">Nombre</th>
-                            <th id="campo-tipo">Tipo</th>
-                            <th id="campo-acciones">Acciones</th>
+                            <th id="referencia">Referencia</th>
+                            <th id="nombre_cliente">Nombre del Cliente</th>
+                            <th id="campo-tipo">Tipo de Sistema</th>
+                            <th id="acciones">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                       <!-- AQUI APARECERA CADA REGISTRO -->
+                        <!-- Aquí se insertarán los registros dinámicamente -->
                     </tbody>
                 </table>
             </div>
@@ -58,20 +63,79 @@
 
     <script>
         function seleccionarTipoSistema(tipo) {
-            // // Mostrar alerta para verificar el tipo seleccionado
-            // alert('Has seleccionado: ' + tipo);
-            
             // Guardar el tipo en localStorage
             localStorage.setItem('tipoSistema', tipo);
-            
-            // Verificar que se guardó
-            const tipoGuardado = localStorage.getItem('tipoSistema');
-            // console.log('Tipo guardado en localStorage:', tipoGuardado);
-            
-            // Redirigir a principalSistema.html
             window.location.href = 'principalSistema.html';
         }
+
+        // Función para cargar los registros desde el backend y mostrarlos en la tabla
+        function cargarRegistros() {
+            fetch('/obtenerRegistros')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const tbody = document.querySelector('.tabla-registros tbody');
+                        tbody.innerHTML = ''; // Limpiar el contenido previo
+                        data.data.forEach(registro => {
+                            const fila = document.createElement('tr');
+
+                            // Columna: Referencia
+                            const columnaReferencia = document.createElement('td');
+                            columnaReferencia.textContent = registro.referencia;
+                            fila.appendChild(columnaReferencia);
+
+                            // Columna: Nombre del Cliente
+                            const columnaCliente = document.createElement('td');
+                            columnaCliente.textContent = registro.nombre_cliente;
+                            fila.appendChild(columnaCliente);
+
+                            // Columna: Tipo de Sistema
+                            const columnaTipo = document.createElement('td');
+                            columnaTipo.textContent = registro.tipo_sistema;
+                            fila.appendChild(columnaTipo);
+
+                            // Columna: Acciones (añadir botones de acción aquí)
+                            const columnaAcciones = document.createElement('td');
+                            columnaAcciones.classList.add('acciones');
+
+                            // Botón de Editar
+                            const editarBtn = document.createElement('button');
+                            editarBtn.classList.add('editar'); // Clase para el estilo de editar
+                            editarBtn.innerHTML = `<span class="ph--note-pencil-bold"></span>`;
+                            editarBtn.addEventListener('click', () => editarRegistro(registro.id)); // Define la función editarRegistro
+                            columnaAcciones.appendChild(editarBtn);
+
+                            // Botón de Ver PDF
+                            const pdfBtn = document.createElement('button');
+                            pdfBtn.classList.add('pdf'); // Clase personalizada para el estilo PDF
+                            pdfBtn.innerHTML = `<span class="ph--file-pdf-bold"></span>`;
+                            pdfBtn.addEventListener('click', () => verPdfRegistro(registro.id)); // Define la función verPdfRegistro
+                            columnaAcciones.appendChild(pdfBtn);
+
+                             // Botón de Eliminar
+                             const eliminarBtn = document.createElement('button');
+                            eliminarBtn.classList.add('eliminar'); // Clase para el estilo de eliminar
+                            eliminarBtn.innerHTML = `<span class="ph--trash-bold"></span>`;
+                            eliminarBtn.addEventListener('click', () => eliminarRegistro(registro.id));
+                            columnaAcciones.appendChild(eliminarBtn);
+
+                            fila.appendChild(columnaAcciones);
+
+                            // Agregar la fila a la tabla
+                            tbody.appendChild(fila);
+                        });
+                    } else {
+                        console.error('Error al obtener los registros:', data.message);
+                    }
+                })
+                .catch(error => console.error('Error en la solicitud:', error));
+        }
+
+        // Llama a cargarRegistros cuando se cargue la página
+        document.addEventListener('DOMContentLoaded', cargarRegistros);
     </script>
 
+
 </body>
+
 </html>
