@@ -119,8 +119,8 @@ main {
 }
 
 .SFVA {
-  background-color: #ffa500;
-  border-color: #ffa500;
+  background-color: #ff8800;
+  border-color: #ff9900;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.53);
   color: rgb(0, 0, 0); /* Color del texto del botón */
 }
@@ -133,27 +133,24 @@ main {
 }
 
 .SFVI:hover {
-  background-color: #a706a7;
-  border: 2px solid;
+  border: 3px solid;
   color: white;
   border-color: #030003;
-  box-shadow: 0 0 30px #920592;
+  font-weight: bolder;
 }
 
 .SFVA:hover {
-  background-color: #005aff;
-  border: 2px solid;
+  border: 3px solid;
   color: white;
   border-color: #030003;
-  box-shadow: 0 0 40px #005aff;
+  font-weight: bolder;
 }
 
 .SFVH:hover {
-  background-color: #0419f9;
   color: white;
-  border: 2px solid;
+  border: 3px solid;
   border-color: #030003;
-  box-shadow: 0 0 30px #0419f9;
+  font-weight: bolder;
 }
 
 /*TABLA DE REGISTROS */
@@ -199,17 +196,6 @@ th {
   width: 300px;
 }
 
-
-/*texto que saldra para cada boton*/
-.texto {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: white;
-  opacity: 0; /* Ocultar el texto por defecto */
-}
-
 .acciones button {
   align-content: center;
   margin: 0 5%;
@@ -219,18 +205,41 @@ th {
   cursor: pointer;
 }
 
+/* Tooltip para los botones */
+.acciones button[data-tooltip] {
+  position: relative;
+}
+
+.acciones button[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  background-color: #333;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 4px;
+  top: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 14px;
+  border: 1px solid #333;
+  z-index: 1;
+  opacity: 1;
+}
+
+
 .editar {
   background-color: rgb(23, 19, 219); /* Verde */
   color: white;
 }
 
 .eliminar {
-  background-color: #168c09; /* Rojo */
+  background-color: #be0000; /* Rojo */
   color: white;
 }
 
 .pdf{
-  background-color: #750cb2;
+  background-color: #088225;
   color: white;
 }
 
@@ -302,7 +311,7 @@ th {
   top: -35px; /* Ajusta la posición del tooltip */
   left: 0;
   white-space: nowrap;
-  font-size: 12px;
+  font-size: 16px;
   border: 1px solid #f5c6cb;
   z-index: 1;
 }

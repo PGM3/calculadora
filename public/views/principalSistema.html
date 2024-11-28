@@ -8,138 +8,185 @@
     <link rel="stylesheet" href="css/principal.css">
 </head>
 
-<body>
-    <header>
-        <div class="nav-bar">
-            <a href="principalSistema.html" class="logo"><img src="Images/LogoTSolar.jpg" alt="Logo"></a>
-            <button class="ic--baseline-home">
-            </button>
-            <h1>CALCULADORA DE <br> SISTEMAS FOTOVOLTAICOS</h1>
-        </div>
-    </header>
-    <main>
-        <div class="titulo">
-            <h1>CALCULADORA DE SISTEMAS <br> FOTOVOLTAICOS INTERCONECTADOS</h1>
-        </div>
-        <div class="contenedor-principal">
-            <div class="CONSUMO">
-                <div class="seccion-consumo">
-                    <h2>DETALLES DE CONSUMO ENERGÉTICO</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Bimestre</th>
-                                <th>Fecha Inicio</th>
-                                <th>Fecha Término</th>
-                                <th>Consumo Energético</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Fecha del Primer Bimestre:</td>
-                                <td><input id="iniPrimero" type="date"></td>
-                                <td><input id="finPrimero" type="date"></td>
-                                <td><input id="cprimero" class="consumos" type="number"></td>
-                            </tr>
-                            <tr>
-                                <td>Fecha del Segundo Bimestre:</td>
-                                <td><input id="iniSegundo" type="date"></td>
-                                <td><input id="finSegundo" type="date"></td>
-                                <td><input id="cSegundo" class="consumos" type="number"></td>
-                            </tr>
-                            <tr>
-                                <td>Fecha del Tercer Bimestre:</td>
-                                <td><input id="iniTercero" type="date"></td>
-                                <td><input id="finTercero" type="date"></td>
-                                <td><input id="cTercero" class="consumos" type="number"></td>
-                            </tr>
-                            <tr>
-                                <td>Fecha del Cuarto Bimestre:</td>
-                                <td><input id="iniCuarto" type="date"></td>
-                                <td><input id="finCuarto" type="date"></td>
-                                <td><input id="cCuarto" class="consumos" type="number"></td>
-                            </tr>
-                            <tr>
-                                <td>Fecha del Quinto Bimestre:</td>
-                                <td><input id="iniQuinto" type="date"></td>
-                                <td><input id="finQuinto" type="date"></td>
-                                <td><input id="cQuinto" class="consumos" type="number"></td>
-                            </tr>
-                            <tr>
-                                <td>Fecha del Sexto Bimestre:</td>
-                                <td><input id="iniSexto" type="date"></td>
-                                <td><input id="finSexto" type="date"></td>
-                                <td><input id="cSexto" class="consumos" type="number"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="UBICACION">
-                <div colspan="2" class="seccion-ubicacion">
-                    <h2>INFORMACIÓN DE <br> LA UBICACIÓN</h2>
-                    <div class="input-ubicacion">
-                        <label for="ubicacion">Ubicación del Sitio:</label>
-                        <input type="text" id="ubicacion" required>
-                    </div>
-                    <div class="input-ubicacion">
-                        <label for="propiedad">Tipo de Propiedad:</label>
-                        <select id="propiedad">
-                            <option value="">Seleccione una opción</option>
-                            <option value="Residencial">Residencial</option>
-                            <option value="Comercial">Comercial</option>
-                            <option value="Industrial">Industrial</option>
-                        </select>
-                    </div>
-                    <div class="input-ubicacion">
-                        <label for="horas_solares">Horas Solares Diarias del Sitio:</label>
-                        <input type="number" id="horas_solares" min="0" required>
-                    </div>
-                </div>
-                <div class="buttons">
-                    <button class="continuar" type="button">Continuar</button>
-                    <button class="cancelar" type="button">Cancelar</button>
-                </div>
+<html>
+<header>
+    <div class="nav-bar">
+        <a href="inicioSistema.html" class="logo"><img src="Images/LogoTSolar.jpg" alt="Logo"></a>
+        <button class="ic--baseline-home">
+        </button>
+        <h1>CALCULADORA DE <br> SISTEMAS FOTOVOLTAICOS</h1>
+    </div>
+</header>
+<main>
+    <div class="titulo">
+        <h1>CALCULADORA DE SISTEMAS <br> FOTOVOLTAICOS INTERCONECTADOS</h1>
+    </div>
+    <div class="contenedor-principal">
+        <div class="CONSUMO">
+            <div class="seccion-consumo">
+                <h2>DETALLES DE CONSUMO ENERGÉTICO</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Bimestre</th>
+                            <th>Fecha Inicio</th>
+                            <th>Fecha Término</th>
+                            <th>Consumo Energético</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Fecha del Primer Bimestre:</td>
+                            <td><input id="iniPrimero" type="date"></td>
+                            <td><input id="finPrimero" type="date"></td>
+                            <td><input id="cprimero" class="consumos" type="number"></td>
+                        </tr>
+                        <tr>
+                            <td>Fecha del Segundo Bimestre:</td>
+                            <td><input id="iniSegundo" type="date"></td>
+                            <td><input id="finSegundo" type="date"></td>
+                            <td><input id="cSegundo" class="consumos" type="number"></td>
+                        </tr>
+                        <tr>
+                            <td>Fecha del Tercer Bimestre:</td>
+                            <td><input id="iniTercero" type="date"></td>
+                            <td><input id="finTercero" type="date"></td>
+                            <td><input id="cTercero" class="consumos" type="number"></td>
+                        </tr>
+                        <tr>
+                            <td>Fecha del Cuarto Bimestre:</td>
+                            <td><input id="iniCuarto" type="date"></td>
+                            <td><input id="finCuarto" type="date"></td>
+                            <td><input id="cCuarto" class="consumos" type="number"></td>
+                        </tr>
+                        <tr>
+                            <td>Fecha del Quinto Bimestre:</td>
+                            <td><input id="iniQuinto" type="date"></td>
+                            <td><input id="finQuinto" type="date"></td>
+                            <td><input id="cQuinto" class="consumos" type="number"></td>
+                        </tr>
+                        <tr>
+                            <td>Fecha del Sexto Bimestre:</td>
+                            <td><input id="iniSexto" type="date"></td>
+                            <td><input id="finSexto" type="date"></td>
+                            <td><input id="cSexto" class="consumos" type="number"></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
-    </main>
-    <footer>
-        <div class="container">
-            <p>&copy; 2024 TECNOLOGÍA SOLAR DE MÉXICO S.A. DE C.V.</p>
+        <div class="UBICACION">
+            <div colspan="2" class="seccion-ubicacion">
+                <h2>INFORMACIÓN DE <br> LA UBICACIÓN</h2>
+                <div class="input-ubicacion">
+                    <label for="ubicacion">Ubicación del Sitio:</label>
+                    <input type="text" id="ubicacion" required>
+                </div>
+                <div class="input-ubicacion">
+                    <label for="estado">Seleccione un estado:</label>
+                    <select id="estado" required>
+                        <option value="" disabled selected>Seleccione un estado</option>
+                    </select>
+                </div>
+                <div class="input-ubicacion">
+                    <label for="irradiacion_solar">Horas Solares Diarias del Sitio:</label>
+                    <input type="number" id="irradiacion_solar" readonly placeholder="Irradiación Solar">
+                </div>
+                <div class="input-ubicacion">
+                    <label for="propiedad">Tipo de Propiedad:</label>
+                    <select id="propiedad">
+                        <option value="">Seleccione una opción</option>
+                        <option value="Residencial">Residencial</option>
+                        <option value="Comercial">Comercial</option>
+                        <option value="Industrial">Industrial</option>
+                    </select>
+                </div>
+            </div>
+            <div class="buttons">
+                <button class="continuar" type="button">Continuar</button>
+                <button class="cancelar" type="button">Cancelar</button>
+            </div>
         </div>
-    </footer>
-    <script src="src/controllers/formulas.js"></script>
-    <script src="src/controllers/validaciones.js"></script>
+    </div>
+</main>
+<footer>
+    <div class="container">
+        <p>&copy; 2024 TECNOLOGÍA SOLAR DE MÉXICO S.A. DE C.V.</p>
+    </div>
+</footer>
+<script src="src/controllers/formulas.js"></script>
+<script src="src/controllers/validaciones.js"></script>
 
-    <script>
-        document.querySelector('.continuar').addEventListener('click', function () {
-            // Validar datos de ubicación
-            if (validarDatosUbicacion()) {
-                // Obtener valores de los campos
-                const ubicacion = document.getElementById('ubicacion').value;
-                const tipoPropiedad = document.getElementById('propiedad').value;
-                const horasSolares = parseFloat(document.getElementById('horas_solares').value) || 0;
-    
-                // Imprimir valores para verificar
-                console.log("Ubicación:", ubicacion);
-                console.log("Tipo de Propiedad:", tipoPropiedad);
-                console.log("Horas Solares Diarias:", horasSolares);
-    
-                // Guardar los datos en el almacenamiento local
-                localStorage.setItem('ubicacion', ubicacion);
-                localStorage.setItem('tipoPropiedad', tipoPropiedad);
-                localStorage.setItem('horasSolares', horasSolares);
-    
-                // Validar datos de consumo antes de continuar
-                if (validarDatosConsumo()) {
-                    // Redirigir a la página de resultados
-                    window.location.href = '/public/views/resultadosSistema.html';
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Variables para los campos de entrada
+        const estadoSelect = document.getElementById('estado');
+        const irradiacionSolarInput = document.getElementById('irradiacion_solar');
+        const continuarBtn = document.querySelector('.continuar');
+
+        // Obtener los estados de la base de datos y rellenar el select
+        fetch('/obtenerEstados')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Limpiar cualquier opción previa
+                    estadoSelect.innerHTML = `
+                    <option value="" disabled selected>Seleccione un estado</option>
+                `;
+
+                    // Agregar las opciones de los estados
+                    data.data.forEach(estado => {
+                        const option = document.createElement('option');
+                        option.value = estado.id_estado; // ID del estado
+                        option.textContent = estado.nombre_estado; // Nombre del estado
+                        option.setAttribute('data-irradiacion', estado.irradiacion_solar); // Valor de irradiación
+                        estadoSelect.appendChild(option);
+                    });
+                } else {
+                    console.error('Error al obtener los estados:', data.message);
                 }
-            } else {
-                console.log("Validación fallida en datos de ubicación.");
-            }
+            })
+            .catch(error => console.error('Error en la solicitud:', error));
+
+        // Cambiar el valor de irradiación solar al seleccionar un estado
+        estadoSelect.addEventListener('change', () => {
+            const selectedOption = estadoSelect.options[estadoSelect.selectedIndex];
+            const irradiacionSolar = selectedOption.getAttribute('data-irradiacion');
+            irradiacionSolarInput.value = irradiacionSolar || ''; // Rellenar el campo o dejarlo vacío si no hay selección
+            localStorage.setItem('irradiacionSolar', irradiacionSolar || ''); // Guardar en localStorage
         });
-    </script>  
-    
+
+        // Botón Continuar para validar y guardar datos
+        if (continuarBtn) {
+            continuarBtn.addEventListener('click', function () {
+                const ubicacionValida = validarDatosUbicacion();
+                const consumoValido = validarDatosConsumo();
+
+                if (ubicacionValida && consumoValido) {
+                    // Obtener valores de los campos de ubicación
+                    const ubicacion = document.getElementById('ubicacion').value.trim();
+                    const tipoPropiedad = document.getElementById('propiedad').value;
+                    const estadoSeleccionado = estadoSelect.options[estadoSelect.selectedIndex].textContent;
+                    const irradiacionSolar = parseFloat(irradiacionSolarInput.value) || 0;
+
+                    // Guardar los datos en el almacenamiento local
+                    localStorage.setItem('ubicacion', ubicacion);
+                    localStorage.setItem('tipoPropiedad', tipoPropiedad);
+                    localStorage.setItem('estadoSeleccionado', estadoSeleccionado);
+                    localStorage.setItem('irradiacionSolar', irradiacionSolar);
+
+                    // Redirigir a la página de resultados
+                    window.location.href = 'resultadosSistema.html';
+                } else {
+                    console.log("Validación fallida en datos de ubicación o consumo.");
+                }
+            });
+        }
+    });
+</script>
+
+</html>
+
 </body>
+
 </html>

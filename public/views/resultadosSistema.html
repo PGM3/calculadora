@@ -12,7 +12,7 @@
 <body>
     <header>
         <div class="nav-bar">
-            <a href="principalSistema.html" class="logo"><img src="Images/LogoTSolar.jpg" alt="Logo"></a>
+            <a href="inicioSistema.html" class="logo"><img src="Images/LogoTSolar.jpg" alt="Logo"></a>
             <button class="ic--baseline-home"></button>
             <h1>CALCULADORA DE <br> SISTEMAS FOTOVOLTAICOS</h1>
         </div>
@@ -35,7 +35,7 @@
                     <tr>
                         <th>Promedio Diario Calculado</th>
                         <th>Promedio Mensual Calculado</th>
-                        <th>Promedio Anual Calculado</th>
+                        <th>Consumo Anual Calculado</th>
                     </tr>
                     <tr>
                         <td><input id="promedio-diario" type="text" /></td>
@@ -120,53 +120,58 @@
     <script src="src/controllers/formulas.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Recuperar valores de localStorage y convertirlos a números
+        document.addEventListener('DOMContentLoaded', () => {
+            // Recuperar valores almacenados en localStorage
             const potenciaPico = parseFloat(localStorage.getItem('potenciaPico')) || 0;
             const promedioDiario = parseFloat(localStorage.getItem('promedioDiario')) || 0;
             const promedioMensual = parseFloat(localStorage.getItem('promedioMensual')) || 0;
             const promedioAnual = parseFloat(localStorage.getItem('promedioAnual')) || 0;
+            const irradiacionSolar = parseFloat(localStorage.getItem('irradiacionSolar')) || 0;
 
-            // Función para calcular componentes
+            // Mostrar valores iniciales en la interfaz
+            document.getElementById('potencia-pico').value = potenciaPico.toFixed(3);
+            document.getElementById('promedio-diario').value = promedioDiario.toFixed(3);
+            document.getElementById('promedio-mensual').value = promedioMensual.toFixed(3);
+            document.getElementById('promedio-anual').value = promedioAnual.toFixed(3);
+
+            // Función para calcular módulos e inversores
             function calcularComponentes(potenciaPico, potenciaModulo, potenciaInversor) {
                 if (!potenciaPico || !potenciaModulo || !potenciaInversor) {
                     return { numeroModulos: 0, numeroInversores: 0 };
                 }
 
-                const numeroModulos = ((potenciaPico * 1000) / potenciaModulo);
-                const numeroInversores = (potenciaPico / potenciaInversor);
+                const numeroModulos = Math.ceil((potenciaPico * 1000) / potenciaModulo); // Redondear al alza
+                const numeroInversores = Math.ceil(numeroModulos * potenciaModulo); // Potencia del inversor en kW
 
                 return { numeroModulos, numeroInversores };
             }
 
-            // Función para actualizar cálculos y almacenar resultados
+            // Función para actualizar componentes y almacenar resultados
             function actualizarComponentes() {
                 const potenciaModulo = parseFloat(document.getElementById('potencia-modulo').value) || 0;
                 const potenciaInversor = parseFloat(document.getElementById('potencia-inversor').value) || 0;
 
                 const resultado = calcularComponentes(potenciaPico, potenciaModulo, potenciaInversor);
 
-                document.getElementById('modulos-utilizar').value = resultado.numeroModulos.toFixed(3);
-                document.getElementById('inversores-utilizar').value = resultado.numeroInversores.toFixed(3);
+                // Actualizar resultados en la interfaz
+                document.getElementById('modulos-utilizar').value = resultado.numeroModulos.toFixed(0);
+                document.getElementById('inversores-utilizar').value = resultado.numeroInversores.toFixed(0);
 
-                localStorage.setItem('modulosUtilizar', resultado.numeroModulos.toFixed(3));
-                localStorage.setItem('inversoresUtilizar', resultado.numeroInversores.toFixed(3));
+                // Guardar resultados en localStorage
+                localStorage.setItem('modulosUtilizar', resultado.numeroModulos);
+                localStorage.setItem('inversoresUtilizar', resultado.numeroInversores);
+
+                console.log('Cálculos actualizados:', resultado);
             }
 
-            // Asignar valores iniciales a los inputs en la interfaz
-            document.getElementById('potencia-pico').value = potenciaPico.toFixed(3);
-            document.getElementById('promedio-diario').value = promedioDiario.toFixed(3);
-            document.getElementById('promedio-mensual').value = promedioMensual.toFixed(3);
-            document.getElementById('promedio-anual').value = promedioAnual.toFixed(3);
-
-            // Event listeners para actualizar localStorage y cálculos
+            // Event listeners para actualizar cálculos en tiempo real
             document.getElementById('marca-modulo').addEventListener('input', function () {
                 localStorage.setItem('marcaModulo', this.value);
             });
 
             document.getElementById('potencia-modulo').addEventListener('input', function () {
                 localStorage.setItem('potenciaModulo', this.value);
-                actualizarComponentes(); // Actualizar cálculos cuando cambia la potencia del módulo
+                actualizarComponentes(); // Actualizar cálculos al cambiar la potencia del módulo
             });
 
             document.getElementById('marca-inversor').addEventListener('input', function () {
@@ -175,13 +180,20 @@
 
             document.getElementById('potencia-inversor').addEventListener('input', function () {
                 localStorage.setItem('potenciaInversor', this.value);
-                actualizarComponentes(); // Actualizar cálculos cuando cambia la potencia del inversor
+                actualizarComponentes(); // Actualizar cálculos al cambiar la potencia del inversor
             });
 
-            // Realizar cálculo inicial
+            // Realizar cálculos iniciales al cargar la página
             actualizarComponentes();
+
+            // botón Guardar
+            const guardarBtn = document.querySelector('.guardar');
+            if (guardarBtn) {
+                guardarBtn.addEventListener('click', guardarDatos);
+            }
         });
     </script>
+
 </body>
 
 </html>

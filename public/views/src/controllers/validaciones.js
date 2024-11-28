@@ -1,10 +1,10 @@
 // Función para resaltar el campo y agregar el mensaje de error en el tooltip
 function resaltarError(input, mensaje) {
-    input.classList.add('input-error');   // Aplica el estilo de error
-    input.setAttribute('title', mensaje); // Añade el mensaje al atributo title
+    input.classList.add('input-error');   // estilo de error
+    input.setAttribute('title', mensaje); // mensaje al atributo title
 }
 
-// Función para quitar el resaltado y el tooltip cuando el campo es válido
+// Función para quitar el resaltado y tooltip cuando el campo es válido
 function quitarResaltadoError(input) {
     input.classList.remove('input-error'); // Remueve el estilo de error
     input.removeAttribute('title');        // Elimina el mensaje del tooltip
@@ -52,6 +52,7 @@ function validarDatosConsumo() {
         }
     });
 
+    console.log(bimestres);
     return esValido;
 }
 
@@ -60,31 +61,45 @@ function validarDatosUbicacion() {
 
     const ubicacion = document.getElementById('ubicacion');
     const tipoPropiedad = document.getElementById('propiedad');
-    const horasSolares = document.getElementById('horas_solares'); // Cambio de "radiacion" a "horas_solares"
+    const estadoSelect = document.getElementById('estado');
+    const irradiacionSolarInput = document.getElementById('irradiacion_solar');
 
-    // Quitar mensajes de error anteriores
+    // Quitar resaltado de errores previos
     quitarResaltadoError(ubicacion);
     quitarResaltadoError(tipoPropiedad);
-    quitarResaltadoError(horasSolares);
+    quitarResaltadoError(estadoSelect);
+    quitarResaltadoError(irradiacionSolarInput);
 
-    // Validación del campo ubicación
-    if (!ubicacion.value) {
+    // Validación del campo "Ubicación"
+    if (!ubicacion.value.trim()) {
         resaltarError(ubicacion, 'La ubicación es requerida.');
         esValido = false;
     }
 
-    // Validación del tipo de propiedad
+    // Validación del campo "Tipo de Propiedad"
     if (!tipoPropiedad.value) {
         resaltarError(tipoPropiedad, 'Debe seleccionar un tipo de propiedad.');
         esValido = false;
     }
 
-    // Validación de horas solares diarias
-    const horasSolaresValue = parseFloat(horasSolares.value) || 0;
-    if (horasSolaresValue <= 0) {
-        resaltarError(horasSolares, 'Las horas solares diarias deben ser un número positivo.');
+    // Validación del campo "Estado"
+    if (!estadoSelect.value) {
+        resaltarError(estadoSelect, 'Debe seleccionar un estado.');
         esValido = false;
     }
+
+    // Validación de la irradiación solar
+    const irradiacionSolar = parseFloat(irradiacionSolarInput.value) || 0;
+    if (irradiacionSolar <= 0) {
+        resaltarError(irradiacionSolarInput, 'La irradiación solar no es válida.');
+        esValido = false;
+    }
+
+    console.log("Ubicación:", ubicacion.value.trim());
+    console.log("Tipo de Propiedad:", tipoPropiedad.value);
+    console.log("Estado:", estadoSelect.value);
+    console.log("Irradiación Solar:", irradiacionSolarInput.value);
+
 
     return esValido;
 }

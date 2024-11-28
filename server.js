@@ -26,7 +26,7 @@ app.post('/guardarSistemaFotovoltaico', (req, res) => {
         datosBimestres,
         ubicacion,
         tipoPropiedad,
-        horasSolares,  // Asegúrate de que este campo coincida con la base de datos
+        horasSolares,
         potenciaPico,
         promedioDiario,
         promedioMensual,
@@ -147,19 +147,90 @@ app.get('/obtenerRegistros', (req, res) => {
 
     conexion.query(query, (error, results) => {
         if (error) {
-            console.error('Error en la consulta:', error); // Para depuración
+            console.error('Error en la consulta:', error); // Para mostrar el error en la consola
             return res.status(500).json({ success: false, message: 'Error al obtener los registros.' });
         }
 
-        // Si no hay resultados, puedes enviar un mensaje claro
+        // Si no hay resultados, 
         if (results.length === 0) {
             return res.json({ success: true, message: 'No se encontraron registros.', data: [] });
         }
 
-        // Responder con los resultados
+        // Si hay resultados, devolverlos
         res.json({ success: true, data: results });
     });
 });
+
+
+// RUTA PARA OBTENER LOS DATOS DE LOS ESTADOS Y SU RADIACION SOLAR
+app.get('/obtenerEstados', (req, res) => {
+    const query = `
+        SELECT id_estado, nombre_estado, irradiacion_solar
+        FROM estados
+        ORDER BY nombre_estado;
+    `;
+
+    conexion.query(query, (error, results) => {
+        if (error) {
+            console.error('Error al obtener los estados:', error);
+            return res.status(500).json({ success: false, message: 'Error al obtener los estados.' });
+        }
+
+        res.json({ success: true, data: results });
+    });
+});
+
+
+
+//RUTA PARA EDITAR LOS DATOS
+app.get('/obtenerRegistro/:id', async (req, res) => {
+    const { id_cliente } = req.params;
+
+    // Validar que el ID es un número
+    if (!id_cliente || isNaN(id_cliente)) {
+        return res.status(400).json({ success: false, message: 'ID de cliente inválido o no proporcionado' });
+    }
+
+    try {
+        // Datos del cliente
+        const [cliente] = await conexion.query('SELECT * FROM clientes WHERE id_cliente = ?', [id_cliente]);
+        if (!cliente) return res.json({ success: false, message: 'Cliente no encontrado.' });
+
+        // Sistema asociado al cliente
+        const [sistema] = await conexion.query('SELECT * FROM sistemas WHERE id_cliente = ?', [id_cliente]);
+        if (!sistema) return res.json({ success: false, message: 'Sistema no encontrado.' });
+
+        // Ubicación del sistema
+        const [ubicacion] = await conexion.query('SELECT * FROM ubicaciones WHERE id_ubicacion = ?', [sistema.id_ubicacion]);
+
+        // Consumos asociados al sistema
+        const consumos = await conexion.query('SELECT * FROM consumos WHERE id_sistema = ?', [sistema.id_sistema]);
+
+        // Inversor asociado al sistema
+        const inversores = await conexion.query('SELECT * FROM inversores WHERE id_sistema = ?', [sistema.id_sistema]);
+
+        // Módulos asociados al sistema
+        const modulos = await conexion.query('SELECT * FROM modulos WHERE id_sistema = ?', [sistema.id_sistema]);
+
+        // Enviar los datos recopilados al frontend
+        res.json({
+            success: true,
+            registro: {
+                cliente,
+                sistema,
+                ubicacion,
+                consumos,
+                inversores,
+                modulos
+            }
+        });
+    } catch (error) {
+        console.error('Error al obtener el registro:', error);
+        res.status(500).json({ success: false, message: 'Error al obtener el registro.' });
+    }
+});
+
+
 
 // Iniciar servidor
 const port = 3000;

@@ -31,9 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const promedioDiario = totalDias > 0 ? totalConsumo / totalDias : 0;
                 const promedioMensual = totalBimestres > 0 ? totalConsumo / (totalBimestres * 2) : 0;
                 const promedioAnual = totalBimestres > 0 ? totalConsumo / (totalBimestres / 6) : 0;
-                const horasSolares = parseFloat(document.getElementById('horas_solares').value) || 0;
+                const irradiacionSolar = parseFloat(localStorage.getItem('irradiacionSolar')) || 0;
                 const eficienciaSistema = 0.76;
-                const potenciaPico = promedioDiario / (horasSolares * eficienciaSistema);
+                const potenciaPico = promedioDiario / (irradiacionSolar * eficienciaSistema);
 
                 // Guardar en localStorage
                 localStorage.setItem('datosBimestres', JSON.stringify(bimestres));
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const numeroModulos = Math.ceil((potenciaPico * 1000) / potenciaModulo);
-            const numeroInversores = Math.ceil(potenciaPico / potenciaInversor);
+            const numeroInversores = Math.ceil(potenciaModulo * numeroModulos);
             return { numeroModulos, numeroInversores };
         }
 
@@ -94,7 +94,7 @@ function obtenerDatosParaInsertar() {
     const datosBimestres = JSON.parse(localStorage.getItem('datosBimestres'));
     const ubicacion = localStorage.getItem('ubicacion') || '';
     const tipoPropiedad = localStorage.getItem('tipoPropiedad') || '';
-    const horasSolares = parseFloat(localStorage.getItem('horasSolares')) || 0; // Cambiado de radiacionDiaria a horasSolares
+    const irradiacionSolar = parseFloat(localStorage.getItem('irradiacionSolar')) || 0;
     const potenciaPico = parseFloat(localStorage.getItem('potenciaPico')) || 0;
     const promedioDiario = parseFloat(localStorage.getItem('promedioDiario')) || 0;
     const promedioMensual = parseFloat(localStorage.getItem('promedioMensual')) || 0;
@@ -111,7 +111,7 @@ function obtenerDatosParaInsertar() {
         datosBimestres,
         ubicacion,
         tipoPropiedad,
-        horasSolares,  // Actualizado a horasSolares
+        irradiacionSolar,  // Actualizado a horasSolares
         potenciaPico,
         promedioDiario,
         promedioMensual,
