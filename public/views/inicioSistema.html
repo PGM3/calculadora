@@ -68,7 +68,7 @@
             window.location.href = 'principalSistema.html';
         }
 
-        // Función para cargar los registros desde el backend y mostrarlos en la tabla
+        // Función para cargar registros desde el servidor
         function cargarRegistros() {
             fetch('/obtenerRegistros')
                 .then(response => response.json())

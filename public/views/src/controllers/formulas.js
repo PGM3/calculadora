@@ -1,17 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Botón Continuar para realizar cálculos en la interfaz principal
     const continuarBtn = document.querySelector('.continuar');
     if (continuarBtn) {
         continuarBtn.addEventListener('click', function () {
-            // Validar datos antes de realizar cálculos
             if (validarDatosConsumo() && validarDatosUbicacion()) {
                 const bimestres = [
-                    { inicio: document.getElementById('iniPrimero').value, fin: document.getElementById('finPrimero').value, consumo: parseFloat(document.getElementById('cprimero').value) || 0 },
-                    { inicio: document.getElementById('iniSegundo').value, fin: document.getElementById('finSegundo').value, consumo: parseFloat(document.getElementById('cSegundo').value) || 0 },
-                    { inicio: document.getElementById('iniTercero').value, fin: document.getElementById('finTercero').value, consumo: parseFloat(document.getElementById('cTercero').value) || 0 },
-                    { inicio: document.getElementById('iniCuarto').value, fin: document.getElementById('finCuarto').value, consumo: parseFloat(document.getElementById('cCuarto').value) || 0 },
-                    { inicio: document.getElementById('iniQuinto').value, fin: document.getElementById('finQuinto').value, consumo: parseFloat(document.getElementById('cQuinto').value) || 0 },
-                    { inicio: document.getElementById('iniSexto').value, fin: document.getElementById('finSexto').value, consumo: parseFloat(document.getElementById('cSexto').value) || 0 }
+                    { inicio: document.getElementById('iniPrimero').value, fin: document.getElementById('finPrimero').value, consumo: parseFloat(document.getElementById('cprimero').value) || 0, totalDias: 0 },
+                    { inicio: document.getElementById('iniSegundo').value, fin: document.getElementById('finSegundo').value, consumo: parseFloat(document.getElementById('cSegundo').value) || 0, totalDias: 0 },
+                    { inicio: document.getElementById('iniTercero').value, fin: document.getElementById('finTercero').value, consumo: parseFloat(document.getElementById('cTercero').value) || 0, totalDias: 0 },
+                    { inicio: document.getElementById('iniCuarto').value, fin: document.getElementById('finCuarto').value, consumo: parseFloat(document.getElementById('cCuarto').value) || 0, totalDias: 0},
+                    { inicio: document.getElementById('iniQuinto').value, fin: document.getElementById('finQuinto').value, consumo: parseFloat(document.getElementById('cQuinto').value) || 0, totalDias: 0 },
+                    { inicio: document.getElementById('iniSexto').value, fin: document.getElementById('finSexto').value, consumo: parseFloat(document.getElementById('cSexto').value) || 0, totalDias: 0 }
                 ];
 
                 let totalConsumo = 0, totalDias = 0, totalBimestres = 0;
@@ -20,8 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         const inicioDate = new Date(bimestre.inicio);
                         const finDate = new Date(bimestre.fin);
                         if (finDate >= inicioDate) {
-                            const dias = Math.ceil((finDate - inicioDate) / (1000 * 60 * 60 * 24)) + 1;
-                            totalDias += dias;
+                            bimestre.totalDias = Math.ceil((finDate - inicioDate) / (1000 * 60 * 60 * 24));
+                            totalDias += bimestre.totalDias;
                             totalConsumo += bimestre.consumo;
                             totalBimestres++;
                         }
@@ -35,8 +33,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const eficienciaSistema = 0.76;
                 const potenciaPico = promedioDiario / (irradiacionSolar * eficienciaSistema);
 
-                // Guardar en localStorage
                 localStorage.setItem('datosBimestres', JSON.stringify(bimestres));
+                localStorage.setItem('totalDias', totalDias);
                 localStorage.setItem('promedioDiario', promedioDiario);
                 localStorage.setItem('promedioMensual', promedioMensual);
                 localStorage.setItem('promedioAnual', promedioAnual);
@@ -46,39 +44,92 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     } else {
-        // Código para la interfaz de resultados
+        // Variables para la página de resultados
         const potenciaPicoInput = document.getElementById('potencia-pico');
         const potenciaModuloInput = document.getElementById('potencia-modulo');
         const potenciaInversorInput = document.getElementById('potencia-inversor');
         const modulosUtilizarInput = document.getElementById('modulos-utilizar');
-        const inversoresUtilizarInput = document.getElementById('inversores-utilizar');
+        const marcaModuloInput = document.getElementById('marca-modulo');
+        const marcaInversorInput = document.getElementById('marca-inversor');
 
-        function calcularComponentes(potenciaPico, potenciaModulo, potenciaInversor) {
-            if (!potenciaPico || !potenciaModulo || !potenciaInversor) {
-                return { numeroModulos: 0, numeroInversores: 0 };
+        // Cargar valores iniciales
+        if (potenciaPicoInput) {
+            potenciaPicoInput.value = (parseFloat(localStorage.getItem('potenciaPico')) || 0).toFixed(3);
+        }
+
+        const promedioDiarioInput = document.getElementById('promedio-diario');
+        if (promedioDiarioInput) {
+            promedioDiarioInput.value = (parseFloat(localStorage.getItem('promedioDiario')) || 0).toFixed(3);
+        }
+
+        const promedioMensualInput = document.getElementById('promedio-mensual');
+        if (promedioMensualInput) {
+            promedioMensualInput.value = (parseFloat(localStorage.getItem('promedioMensual')) || 0).toFixed(3);
+        }
+
+        const promedioAnualInput = document.getElementById('promedio-anual');
+        if (promedioAnualInput) {
+            promedioAnualInput.value = (parseFloat(localStorage.getItem('promedioAnual')) || 0).toFixed(3);
+        }
+
+        function calcularComponentes(potenciaPico, potenciaModulo) {
+            if (!potenciaPico || !potenciaModulo) {
+                return { numeroModulos: 0, potenciaInversorRequerida: 0 };
             }
+            // Cálculo de módulos
+            const numeroModulos = (potenciaPico * 1000) / potenciaModulo;
+            // Cálculo de potencia del inversor
+            const potenciaInversorRequerida = numeroModulos * potenciaModulo;
 
-            const numeroModulos = Math.ceil((potenciaPico * 1000) / potenciaModulo);
-            const numeroInversores = Math.ceil(potenciaModulo * numeroModulos);
-            return { numeroModulos, numeroInversores };
+            console.log('Cálculos:', {
+                potenciaPico,
+                potenciaModulo,
+                numeroModulos,
+                potenciaInversorRequerida
+            });
+
+            return { numeroModulos, potenciaInversorRequerida };
         }
 
-        function actualizarCalculos() {
-            const potenciaPicoVal = parseFloat(potenciaPicoInput.value) || 0;
+        function actualizarComponentes() {
             const potenciaModulo = parseFloat(potenciaModuloInput.value) || 0;
-            const potenciaInversor = parseFloat(potenciaInversorInput.value) || 0;
+            const potenciaPicoVal = parseFloat(potenciaPicoInput.value) || 0;
 
-            const { numeroModulos, numeroInversores } = calcularComponentes(potenciaPicoVal, potenciaModulo, potenciaInversor);
-            modulosUtilizarInput.value = numeroModulos || '';
-            inversoresUtilizarInput.value = numeroInversores || '';
+            const resultado = calcularComponentes(potenciaPicoVal, potenciaModulo);
 
-            localStorage.setItem('modulosUtilizar', numeroModulos);
-            localStorage.setItem('inversoresUtilizar', numeroInversores);
+            if (modulosUtilizarInput) modulosUtilizarInput.value = resultado.numeroModulos;
+            if (potenciaInversorInput) potenciaInversorInput.value = resultado.potenciaInversorRequerida;
+
+            // Guardar en localStorage
+            localStorage.setItem('modulosUtilizar', resultado.numeroModulos);
+            localStorage.setItem('potenciaInversor', resultado.potenciaInversorRequerida);
         }
 
-        potenciaModuloInput.addEventListener('input', actualizarCalculos);
-        potenciaInversorInput.addEventListener('input', actualizarCalculos);
-        actualizarCalculos();
+
+        // Event listeners
+        if (marcaModuloInput) {
+            marcaModuloInput.addEventListener('input', function () {
+                localStorage.setItem('marcaModulo', this.value);
+            });
+        }
+
+        if (potenciaModuloInput) {
+            potenciaModuloInput.addEventListener('input', function () {
+                localStorage.setItem('potenciaModulo', this.value);
+                actualizarComponentes();
+            });
+        }
+
+        if (marcaInversorInput) {
+            marcaInversorInput.addEventListener('input', function () {
+                localStorage.setItem('marcaInversor', this.value);
+            });
+        }
+
+        // Realizar cálculo inicial si estamos en la página de resultados
+        if (potenciaModuloInput) {
+            actualizarComponentes();
+        }
     }
 
     // Configuración del botón Guardar
@@ -88,13 +139,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Función para preparar los datos para la inserción en la BD
 function obtenerDatosParaInsertar() {
     const tipoSistema = localStorage.getItem('tipoSistema');
     const datosBimestres = JSON.parse(localStorage.getItem('datosBimestres'));
+    const totalDias = parseInt(localStorage.getItem('totalDias')) || 0;
     const ubicacion = localStorage.getItem('ubicacion') || '';
     const tipoPropiedad = localStorage.getItem('tipoPropiedad') || '';
-    const irradiacionSolar = parseFloat(localStorage.getItem('irradiacionSolar')) || 0;
+    const id_estado = parseInt(localStorage.getItem('estadoSeleccionado'));
     const potenciaPico = parseFloat(localStorage.getItem('potenciaPico')) || 0;
     const promedioDiario = parseFloat(localStorage.getItem('promedioDiario')) || 0;
     const promedioMensual = parseFloat(localStorage.getItem('promedioMensual')) || 0;
@@ -104,14 +155,14 @@ function obtenerDatosParaInsertar() {
     const modulosUtilizar = parseInt(localStorage.getItem('modulosUtilizar')) || 0;
     const marcaInversor = localStorage.getItem('marcaInversor') || '';
     const potenciaInversor = parseFloat(localStorage.getItem('potenciaInversor')) || 0;
-    const inversoresUtilizar = parseInt(localStorage.getItem('inversoresUtilizar')) || 0;
 
     return {
         tipoSistema,
         datosBimestres,
+        totalDias,
         ubicacion,
         tipoPropiedad,
-        irradiacionSolar,  // Actualizado a horasSolares
+        id_estado,
         potenciaPico,
         promedioDiario,
         promedioMensual,
@@ -120,12 +171,10 @@ function obtenerDatosParaInsertar() {
         potenciaModulo,
         modulosUtilizar,
         marcaInversor,
-        potenciaInversor,
-        inversoresUtilizar
+        potenciaInversor
     };
 }
 
-// Función que usa SweetAlert para solicitar los datos del cliente
 async function solicitarDatosCliente() {
     const { value: formValues } = await Swal.fire({
         title: "Ingrese los datos del cliente",
@@ -154,12 +203,9 @@ async function solicitarDatosCliente() {
     }
 }
 
-// Función para enviar los datos al backend
 async function guardarDatos() {
-    // Solicitar los datos del cliente antes de proceder
     const datosCliente = await solicitarDatosCliente();
-
-    if (!datosCliente) return; // Si los datos no se completaron, salir de la función
+    if (!datosCliente) return;
 
     const datosParaInsertar = {
         ...obtenerDatosParaInsertar(),
@@ -173,32 +219,12 @@ async function guardarDatos() {
         },
         body: JSON.stringify(datosParaInsertar)
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            Swal.fire({
-                title: 'Éxito!',
-                text: 'Los datos han sido guardados exitosamente.',
-                icon: 'success',
-                confirmButtonText: 'Aceptar'
-            });
-            console.log('Datos guardados exitosamente:', data);
-        } else {
-            Swal.fire({
-                title: 'Error',
-                text: 'Hubo un error al guardar los datos. Por favor, intenta nuevamente.',
-                icon: 'error',
-                confirmButtonText: 'Aceptar'
-            });
-        }
-        console.log('Respuesta del servidor:', data);
-    })
-    .catch(error => {
-        Swal.fire({
-            title: 'Error',
-            text: 'Hubo un error al enviar la solicitud al servidor.',
-            icon: 'error',
-            confirmButtonText: 'Aceptar'
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire('¡Éxito!', 'Los datos han sido guardados exitosamente.', 'success');
+            } else {
+                Swal.fire('Error', data.message, 'error');
+            }
         });
-    });
 }

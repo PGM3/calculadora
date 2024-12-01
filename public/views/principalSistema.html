@@ -152,36 +152,35 @@
         estadoSelect.addEventListener('change', () => {
             const selectedOption = estadoSelect.options[estadoSelect.selectedIndex];
             const irradiacionSolar = selectedOption.getAttribute('data-irradiacion');
+            localStorage.setItem('estadoSeleccionado', estadoSelect.value);
             irradiacionSolarInput.value = irradiacionSolar || ''; // Rellenar el campo o dejarlo vacío si no hay selección
             localStorage.setItem('irradiacionSolar', irradiacionSolar || ''); // Guardar en localStorage
         });
 
         // Botón Continuar para validar y guardar datos
+        // En el evento click del botón continuar
         if (continuarBtn) {
             continuarBtn.addEventListener('click', function () {
                 const ubicacionValida = validarDatosUbicacion();
                 const consumoValido = validarDatosConsumo();
 
                 if (ubicacionValida && consumoValido) {
-                    // Obtener valores de los campos de ubicación
                     const ubicacion = document.getElementById('ubicacion').value.trim();
                     const tipoPropiedad = document.getElementById('propiedad').value;
-                    const estadoSeleccionado = estadoSelect.options[estadoSelect.selectedIndex].textContent;
+                    const estadoId = estadoSelect.value;
                     const irradiacionSolar = parseFloat(irradiacionSolarInput.value) || 0;
 
                     // Guardar los datos en el almacenamiento local
                     localStorage.setItem('ubicacion', ubicacion);
                     localStorage.setItem('tipoPropiedad', tipoPropiedad);
-                    localStorage.setItem('estadoSeleccionado', estadoSeleccionado);
+                    localStorage.setItem('estadoSeleccionado', estadoId);
                     localStorage.setItem('irradiacionSolar', irradiacionSolar);
 
-                    // Redirigir a la página de resultados
                     window.location.href = 'resultadosSistema.html';
-                } else {
-                    console.log("Validación fallida en datos de ubicación o consumo.");
                 }
             });
         }
+
     });
 </script>
 
