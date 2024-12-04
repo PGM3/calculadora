@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     { inicio: document.getElementById('iniPrimero').value, fin: document.getElementById('finPrimero').value, consumo: parseFloat(document.getElementById('cprimero').value) || 0, totalDias: 0 },
                     { inicio: document.getElementById('iniSegundo').value, fin: document.getElementById('finSegundo').value, consumo: parseFloat(document.getElementById('cSegundo').value) || 0, totalDias: 0 },
                     { inicio: document.getElementById('iniTercero').value, fin: document.getElementById('finTercero').value, consumo: parseFloat(document.getElementById('cTercero').value) || 0, totalDias: 0 },
-                    { inicio: document.getElementById('iniCuarto').value, fin: document.getElementById('finCuarto').value, consumo: parseFloat(document.getElementById('cCuarto').value) || 0, totalDias: 0},
+                    { inicio: document.getElementById('iniCuarto').value, fin: document.getElementById('finCuarto').value, consumo: parseFloat(document.getElementById('cCuarto').value) || 0, totalDias: 0 },
                     { inicio: document.getElementById('iniQuinto').value, fin: document.getElementById('finQuinto').value, consumo: parseFloat(document.getElementById('cQuinto').value) || 0, totalDias: 0 },
                     { inicio: document.getElementById('iniSexto').value, fin: document.getElementById('finSexto').value, consumo: parseFloat(document.getElementById('cSexto').value) || 0, totalDias: 0 }
                 ];
@@ -77,8 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return { numeroModulos: 0, potenciaInversorRequerida: 0 };
             }
             // Cálculo de módulos
-            const numeroModulos = (potenciaPico * 1000) / potenciaModulo;
-            // Cálculo de potencia del inversor
+            const numeroModulos = Math.ceil((potenciaPico * 1000) / potenciaModulo);            // Cálculo de potencia del inversor
             const potenciaInversorRequerida = numeroModulos * potenciaModulo;
 
             console.log('Cálculos:', {

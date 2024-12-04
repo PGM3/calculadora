@@ -138,60 +138,6 @@
         document.addEventListener('DOMContentLoaded', cargarRegistros);
     </script>
 
-    <script>
-        async function editarRegistro(id_cliente) {
-            try {
-                const response = await fetch(`/obtenerRegistro/${id_cliente}`);
-                const data = await response.json();
-
-                if (data.success) {
-                    const { clientes, sistemas, ubicaciones, consumos, inversores, modulos } = data.registro;
-
-                    // Llenar campos del cliente
-                    document.getElementById('swal-input-referencia').value = clientes.referencia;
-                    document.getElementById('swal-input-nombre').value = clientes.nombre_cliente;
-                    document.getElementById('swal-input-telefono').value = clientes.telefono;
-                    document.getElementById('swal-input-correo').value = clientes.correo;
-
-                    // Llenar campos del sistema
-                    document.getElementById('tipo-sistema').value = sistemas.tipo_sistema;
-                    document.getElementById('potencia-pico').value = sistemas.potencia_pico;
-
-                    // Llenar campos de ubicación
-                    document.getElementById('ubicacion').value = ubicaciones.direccion;
-                    document.getElementById('tipo-propiedad').value = ubicaciones.tipo_propiedad;
-                    document.getElementById('horas-solares').value = ubicaciones.horas_solares;
-
-                    // Llenar campos de consumos
-                    consumos.forEach((consumo, index) => {
-                        document.getElementById(`inicio-bimestre-${index + 1}`).value = consumo.fecha_inicio;
-                        document.getElementById(`fin-bimestre-${index + 1}`).value = consumo.fecha_termino;
-                        document.getElementById(`consumo-bimestre-${index + 1}`).value = consumo.consumo_energetico;
-                    });
-
-                    // Llenar campos de inversores
-                    if (inversores.length > 0) {
-                        document.getElementById('marca-inversor').value = inversores[0].marca_inversor;
-                        document.getElementById('potencia-inversor').value = inversores[0].potencia_nominal_salida;
-                    }
-
-                    // Llenar campos de módulos
-                    if (modulos.length > 0) {
-                        document.getElementById('marca-modulo').value = modulos[0].marca_modulo;
-                        document.getElementById('potencia-modulo').value = modulos[0].potencia_nominal_salida;
-                    }
-
-                    // Puedes abrir aquí el modal o el formulario para realizar la edición
-                } else {
-                    console.error('Error al obtener los datos para editar:', data.message);
-                }
-            } catch (error) {
-                console.error('Error en la solicitud de edición:', error);
-            }
-        }
-
-    </script>
-
 </body>
 
 </html>

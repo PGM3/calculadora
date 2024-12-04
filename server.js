@@ -122,6 +122,8 @@ app.post('/guardarSistemaFotovoltaico', (req, res) => {
         });
     });
 });
+
+
 //TABLA DE REGISTROS
 app.get('/obtenerRegistros', (req, res) => {
     const query = `
@@ -132,7 +134,6 @@ app.get('/obtenerRegistros', (req, res) => {
         FROM sistemas
         INNER JOIN clientes ON sistemas.id_cliente = clientes.id_cliente
         LIMIT 0, 25
-        ORDER B DESC
     `;
 
     conexion.query(query, (error, results) => {
