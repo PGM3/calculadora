@@ -128,6 +128,7 @@ app.post('/guardarSistemaFotovoltaico', (req, res) => {
 app.get('/obtenerRegistros', (req, res) => {
     const query = `
         SELECT 
+            clientes.id_cliente, 
             clientes.referencia, 
             clientes.nombre_cliente, 
             sistemas.tipo_sistema
@@ -163,6 +164,126 @@ app.get('/obtenerEstados', (req, res) => {
         res.json({ success: true, data: results });
     });
 });
+
+//BOTON DE REGISTRAR
+app.get('/obtenerRegistro/:id', (req, res) => {
+    const id_cliente = req.params.id;
+    
+    // Primero obtenemos los datos principales
+    const queryPrincipal = `
+        SELECT 
+            c.id_cliente,
+            c.referencia,
+            c.nombre_cliente,
+            s.tipo_sistema,
+            u.direccion as ubicacion,
+            u.tipo_propiedad,
+            u.id_estado,
+            e.irradiacion_solar
+        FROM clientes c
+        JOIN sistemas s ON c.id_cliente = s.id_cliente
+        JOIN ubicaciones u ON s.id_ubicacion = u.id_ubicacion
+        JOIN estados e ON u.id_estado = e.id_estado
+        WHERE c.id_cliente = ?
+    `;
+
+    // Consulta para obtener los consumos
+    const queryConsumos = `
+        SELECT 
+            c.fecha_inicio,
+            c.fecha_termino,
+            c.consumo_energetico as consumo
+        FROM consumos c
+        JOIN sistemas s ON c.id_sistema = s.id_sistema
+        WHERE s.id_cliente = ?
+        ORDER BY c.id_consumo
+    `;
+
+    conexion.query(queryPrincipal, [id_cliente], (error, resultadosPrincipales) => {
+        if (error) {
+            return res.json({ success: false, message: 'Error al obtener datos principales' });
+        }
+
+        conexion.query(queryConsumos, [id_cliente], (error, resultadosConsumos) => {
+            if (error) {
+                return res.json({ success: false, message: 'Error al obtener consumos' });
+            }
+
+            const datos = {
+                ...resultadosPrincipales[0],
+                consumos: resultadosConsumos
+            };
+
+            res.json({ success: true, data: datos });
+        });
+    });
+});
+
+//ruta de actualización
+app.put('/actualizarRegistro/:id', (req, res) => {
+    const id_cliente = req.params.id;
+    const datos = req.body;
+
+    conexion.beginTransaction(error => {
+        if (error) {
+            return res.json({ success: false, message: 'Error al iniciar la transacción' });
+        }
+
+        // Actualizar ubicación
+        const queryUbicacion = `
+            UPDATE ubicaciones u
+            JOIN sistemas s ON u.id_ubicacion = s.id_ubicacion
+            SET 
+                u.direccion = ?,
+                u.tipo_propiedad = ?,
+                u.id_estado = ?
+            WHERE s.id_cliente = ?
+        `;
+
+        conexion.query(queryUbicacion, 
+            [datos.ubicacion, datos.tipoPropiedad, datos.idEstado, id_cliente], 
+            (error) => {
+                if (error) {
+                    return conexion.rollback(() => {
+                        res.json({ success: false, message: 'Error al actualizar ubicación' });
+                    });
+                }
+
+                // Actualizar consumos
+                datos.consumos.forEach((consumo, index) => {
+                    const queryConsumo = `
+                        UPDATE consumos c
+                        JOIN sistemas s ON c.id_sistema = s.id_sistema
+                        SET 
+                            c.fecha_inicio = ?,
+                            c.fecha_termino = ?,
+                            c.consumo_energetico = ?
+                        WHERE s.id_cliente = ? AND c.id_consumo = ?
+                    `;
+
+                    conexion.query(queryConsumo, 
+                        [consumo.fechaInicio, consumo.fechaFin, consumo.consumo, id_cliente, index + 1],
+                        (error) => {
+                            if (error) {
+                                return conexion.rollback(() => {
+                                    res.json({ success: false, message: 'Error al actualizar consumos' });
+                                });
+                            }
+                        });
+                });
+
+                conexion.commit(error => {
+                    if (error) {
+                        return conexion.rollback(() => {
+                            res.json({ success: false, message: 'Error al confirmar la transacción' });
+                        });
+                    }
+                    res.json({ success: true, message: 'Registro actualizado correctamente' });
+                });
+            });
+    });
+});
+
 
 const port = 3000;
 app.listen(port, () => {

@@ -60,7 +60,7 @@
             <p>&copy; 2024 TECNOLOGÍA SOLAR DE MÉXICO S.A. DE C.V.</p>
         </div>
     </footer>
-
+    <script src="src/controllers/formulas.js"></script>
     <script>
         function seleccionarTipoSistema(tipo) {
             // Guardar el tipo en localStorage
@@ -100,11 +100,14 @@
 
                             // Botón de Editar
                             const editarBtn = document.createElement('button');
-                            editarBtn.classList.add('editar'); // Clase para el estilo de editar
+                            editarBtn.classList.add('editar');
                             editarBtn.innerHTML = `<span class="ph--note-pencil-bold"></span>`;
                             editarBtn.setAttribute("data-tooltip", "Editar");
-                            editarBtn.addEventListener('click', () => editarRegistro(registro.id_cliente)); // función editarRegistro
+                            editarBtn.addEventListener('click', () => {
+                                editarRegistro(registro.id_cliente); // Asegúrate de pasar el ID correcto
+                            });
                             columnaAcciones.appendChild(editarBtn);
+
 
                             // Botón de Ver PDF
                             const pdfBtn = document.createElement('button');
