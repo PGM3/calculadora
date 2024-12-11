@@ -60,7 +60,7 @@
             <p>&copy; 2024 TECNOLOGÍA SOLAR DE MÉXICO S.A. DE C.V.</p>
         </div>
     </footer>
-    <script src="src/controllers/formulas.js"></script>
+
     <script>
         function seleccionarTipoSistema(tipo) {
             // Guardar el tipo en localStorage
@@ -75,72 +75,90 @@
                 .then(data => {
                     if (data.success) {
                         const tbody = document.querySelector('.tabla-registros tbody');
-                        tbody.innerHTML = ''; // Limpiar el contenido previo
+                        tbody.innerHTML = '';
+
                         data.data.forEach(registro => {
                             const fila = document.createElement('tr');
 
-                            // Columna: Referencia
-                            const columnaReferencia = document.createElement('td');
-                            columnaReferencia.textContent = registro.referencia;
-                            fila.appendChild(columnaReferencia);
+                            // Columnas básicas
+                            ['referencia', 'nombre_cliente', 'tipo_sistema'].forEach(campo => {
+                                const columna = document.createElement('td');
+                                columna.textContent = registro[campo];
+                                fila.appendChild(columna);
+                            });
 
-                            // Columna: Nombre del Cliente
-                            const columnaCliente = document.createElement('td');
-                            columnaCliente.textContent = registro.nombre_cliente;
-                            fila.appendChild(columnaCliente);
-
-                            // Columna: Tipo de Sistema
-                            const columnaTipo = document.createElement('td');
-                            columnaTipo.textContent = registro.tipo_sistema;
-                            fila.appendChild(columnaTipo);
-
-                            // Columna: Acciones (botones)
+                            // Columna de acciones
                             const columnaAcciones = document.createElement('td');
                             columnaAcciones.classList.add('acciones');
 
-                            // Botón de Editar
-                            const editarBtn = document.createElement('button');
-                            editarBtn.classList.add('editar');
-                            editarBtn.innerHTML = `<span class="ph--note-pencil-bold"></span>`;
-                            editarBtn.setAttribute("data-tooltip", "Editar");
-                            editarBtn.addEventListener('click', () => {
-                                editarRegistro(registro.id_cliente); // Asegúrate de pasar el ID correcto
+                            // Botones
+                            const botones = [
+                                {
+                                    clase: 'editar', icono: 'ph--note-pencil-bold', tooltip: 'Editar',
+                                    accion: () => editarRegistro(registro.id_cliente)
+                                },
+                                {
+                                    clase: 'pdf', icono: 'ph--file-pdf-bold', tooltip: 'Ver PDF',
+                                    accion: () => verPdfRegistro(registro.id_cliente)
+                                },
+                                {
+                                    clase: 'eliminar', icono: 'ph--trash-bold', tooltip: 'Eliminar',
+                                    accion: () => eliminarRegistro(registro.id_cliente)
+                                }
+                            ];
+
+                            botones.forEach(({ clase, icono, tooltip, accion }) => {
+                                const btn = document.createElement('button');
+                                btn.classList.add(clase);
+                                btn.innerHTML = `<span class="${icono}"></span>`;
+                                btn.setAttribute("data-tooltip", tooltip);
+                                btn.addEventListener('click', accion);
+                                columnaAcciones.appendChild(btn);
                             });
-                            columnaAcciones.appendChild(editarBtn);
-
-
-                            // Botón de Ver PDF
-                            const pdfBtn = document.createElement('button');
-                            pdfBtn.classList.add('pdf'); // Clase para el estilo PDF
-                            pdfBtn.innerHTML = `<span class="ph--file-pdf-bold"></span>`;
-                            pdfBtn.setAttribute("data-tooltip", "Ver PDF");
-                            pdfBtn.addEventListener('click', () => verPdfRegistro(registro.id)); // función verPdfRegistro
-                            columnaAcciones.appendChild(pdfBtn);
-
-                            // Botón de Eliminar
-                            const eliminarBtn = document.createElement('button');
-                            eliminarBtn.classList.add('eliminar'); // Clase para el estilo de eliminar
-                            eliminarBtn.innerHTML = `<span class="ph--trash-bold"></span>`;
-                            eliminarBtn.setAttribute("data-tooltip", "Eliminar");
-                            eliminarBtn.addEventListener('click', () => eliminarRegistro(registro.id));
-                            columnaAcciones.appendChild(eliminarBtn);
 
                             fila.appendChild(columnaAcciones);
-
-                            // Agregar la fila a la tabla
                             tbody.appendChild(fila);
                         });
-                    } else {
-                        console.error('Error al obtener los registros:', data.message);
                     }
                 })
-                .catch(error => console.error('Error en la solicitud:', error));
+                .catch(error => console.error('Error:', error));
         }
 
-        // Llama a cargarRegistros cuando se cargue la página
         document.addEventListener('DOMContentLoaded', cargarRegistros);
+
+
+        //eliminar egistro
+        function eliminarRegistro(id_cliente) {
+            if (!id_cliente) {
+                Swal.fire('Error', 'ID de cliente no válido', 'error');
+                return;
+            }
+
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "No podrás revertir esta acción",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/eliminarRegistro/${id_cliente}`, {
+                        method: 'DELETE'
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire('¡Eliminado!', 'Registro eliminado con éxito', 'success');
+                                cargarRegistros();
+                            }
+                        });
+                }
+            });
+        }
     </script>
 
 </body>
-
 </html>

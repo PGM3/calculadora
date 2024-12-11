@@ -3,7 +3,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const app = express();
 
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -127,15 +127,16 @@ app.post('/guardarSistemaFotovoltaico', (req, res) => {
 //TABLA DE REGISTROS
 app.get('/obtenerRegistros', (req, res) => {
     const query = `
-        SELECT 
-            clientes.id_cliente, 
-            clientes.referencia, 
-            clientes.nombre_cliente, 
-            sistemas.tipo_sistema
-        FROM sistemas
-        INNER JOIN clientes ON sistemas.id_cliente = clientes.id_cliente
-        LIMIT 0, 25
-    `;
+    SELECT 
+        clientes.id_cliente,
+        clientes.referencia, 
+        clientes.nombre_cliente, 
+        sistemas.tipo_sistema
+    FROM sistemas
+    INNER JOIN clientes ON sistemas.id_cliente = clientes.id_cliente
+    ORDER BY clientes.id_cliente DESC
+    LIMIT 25
+`;
 
     conexion.query(query, (error, results) => {
         if (error) {
@@ -165,122 +166,67 @@ app.get('/obtenerEstados', (req, res) => {
     });
 });
 
-//BOTON DE REGISTRAR
-app.get('/obtenerRegistro/:id', (req, res) => {
-    const id_cliente = req.params.id;
-    
-    // Primero obtenemos los datos principales
-    const queryPrincipal = `
-        SELECT 
-            c.id_cliente,
-            c.referencia,
-            c.nombre_cliente,
-            s.tipo_sistema,
-            u.direccion as ubicacion,
-            u.tipo_propiedad,
-            u.id_estado,
-            e.irradiacion_solar
-        FROM clientes c
-        JOIN sistemas s ON c.id_cliente = s.id_cliente
-        JOIN ubicaciones u ON s.id_ubicacion = u.id_ubicacion
-        JOIN estados e ON u.id_estado = e.id_estado
-        WHERE c.id_cliente = ?
-    `;
+//DATOS PARA EDICION
+app.get('/obtenerDatosCompletos/:id_cliente', (req, res) => {
+    const id_cliente = req.params.id_cliente;
 
-    // Consulta para obtener los consumos
-    const queryConsumos = `
-        SELECT 
-            c.fecha_inicio,
-            c.fecha_termino,
-            c.consumo_energetico as consumo
-        FROM consumos c
-        JOIN sistemas s ON c.id_sistema = s.id_sistema
-        WHERE s.id_cliente = ?
-        ORDER BY c.id_consumo
-    `;
+    // Query para obtener todos los datos
+    const queries = {
+        cliente: 'SELECT * FROM clientes WHERE id_cliente = ?',
+        sistema: `
+            SELECT s.*, u.*, m.*, i.*
+            FROM sistemas s
+            JOIN ubicaciones u ON s.id_ubicacion = u.id_ubicacion
+            JOIN modulos m ON s.id_sistema = m.id_sistema
+            JOIN inversores i ON s.id_sistema = i.id_sistema
+            WHERE s.id_cliente = ?
+        `,
+        bimestres: 'SELECT * FROM consumos WHERE id_sistema = (SELECT id_sistema FROM sistemas WHERE id_cliente = ?)'
+    };
 
-    conexion.query(queryPrincipal, [id_cliente], (error, resultadosPrincipales) => {
-        if (error) {
-            return res.json({ success: false, message: 'Error al obtener datos principales' });
-        }
+    // Ejecutar queries
+    conexion.query(queries.cliente, [id_cliente], (error, clienteResults) => {
+        if (error) return res.status(500).json({ success: false, message: 'Error al obtener datos del cliente' });
 
-        conexion.query(queryConsumos, [id_cliente], (error, resultadosConsumos) => {
-            if (error) {
-                return res.json({ success: false, message: 'Error al obtener consumos' });
-            }
+        conexion.query(queries.sistema, [id_cliente], (error, sistemaResults) => {
+            if (error) return res.status(500).json({ success: false, message: 'Error al obtener datos del sistema' });
 
-            const datos = {
-                ...resultadosPrincipales[0],
-                consumos: resultadosConsumos
-            };
+            conexion.query(queries.bimestres, [id_cliente], (error, bimestresResults) => {
+                if (error) return res.status(500).json({ success: false, message: 'Error al obtener datos de consumos' });
 
-            res.json({ success: true, data: datos });
+                res.json({
+                    success: true,
+                    cliente: clienteResults[0],
+                    sistema: sistemaResults[0],
+                    bimestres: bimestresResults
+                });
+            });
         });
     });
 });
 
-//ruta de actualización
-app.put('/actualizarRegistro/:id', (req, res) => {
-    const id_cliente = req.params.id;
-    const datos = req.body;
 
-    conexion.beginTransaction(error => {
+//eliminar registro
+app.delete('/eliminarRegistro/:id_cliente', (req, res) => {
+    const id_cliente = req.params.id_cliente;
+    
+    const query = `
+        DELETE c, s, u, m, i, co
+        FROM clientes c
+        LEFT JOIN sistemas s ON c.id_cliente = s.id_cliente
+        LEFT JOIN ubicaciones u ON s.id_ubicacion = u.id_ubicacion
+        LEFT JOIN modulos m ON s.id_sistema = m.id_sistema
+        LEFT JOIN inversores i ON s.id_sistema = i.id_sistema
+        LEFT JOIN consumos co ON s.id_sistema = co.id_sistema
+        WHERE c.id_cliente = ?
+    `;
+
+    conexion.query(query, [id_cliente], (error, results) => {
         if (error) {
-            return res.json({ success: false, message: 'Error al iniciar la transacción' });
+            console.error('Error al eliminar:', error);
+            return res.status(500).json({ success: false, message: 'Error al eliminar el registro' });
         }
-
-        // Actualizar ubicación
-        const queryUbicacion = `
-            UPDATE ubicaciones u
-            JOIN sistemas s ON u.id_ubicacion = s.id_ubicacion
-            SET 
-                u.direccion = ?,
-                u.tipo_propiedad = ?,
-                u.id_estado = ?
-            WHERE s.id_cliente = ?
-        `;
-
-        conexion.query(queryUbicacion, 
-            [datos.ubicacion, datos.tipoPropiedad, datos.idEstado, id_cliente], 
-            (error) => {
-                if (error) {
-                    return conexion.rollback(() => {
-                        res.json({ success: false, message: 'Error al actualizar ubicación' });
-                    });
-                }
-
-                // Actualizar consumos
-                datos.consumos.forEach((consumo, index) => {
-                    const queryConsumo = `
-                        UPDATE consumos c
-                        JOIN sistemas s ON c.id_sistema = s.id_sistema
-                        SET 
-                            c.fecha_inicio = ?,
-                            c.fecha_termino = ?,
-                            c.consumo_energetico = ?
-                        WHERE s.id_cliente = ? AND c.id_consumo = ?
-                    `;
-
-                    conexion.query(queryConsumo, 
-                        [consumo.fechaInicio, consumo.fechaFin, consumo.consumo, id_cliente, index + 1],
-                        (error) => {
-                            if (error) {
-                                return conexion.rollback(() => {
-                                    res.json({ success: false, message: 'Error al actualizar consumos' });
-                                });
-                            }
-                        });
-                });
-
-                conexion.commit(error => {
-                    if (error) {
-                        return conexion.rollback(() => {
-                            res.json({ success: false, message: 'Error al confirmar la transacción' });
-                        });
-                    }
-                    res.json({ success: true, message: 'Registro actualizado correctamente' });
-                });
-            });
+        res.json({ success: true, message: 'Registro eliminado correctamente' });
     });
 });
 
