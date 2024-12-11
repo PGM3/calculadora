@@ -231,6 +231,64 @@ app.delete('/eliminarRegistro/:id_cliente', (req, res) => {
 });
 
 
+//PDF
+const PDFDocument = require('pdfkit');
+const fs = require('fs');
+
+app.get('/generarPDF/:id_cliente', (req, res) => {
+    const id_cliente = req.params.id_cliente;
+    const doc = new PDFDocument({margin: 50});
+
+    // Configuración del documento
+    doc.pipe(res);
+    
+    // Encabezado con logo
+    doc.image('public/Images/LogoTSolar.jpg', 50, 45, {width: 100})
+       .fontSize(20)
+       .text('Propuesta Técnica Económica', 200, 45)
+       .moveDown();
+
+    // Consulta a la base de datos
+    const query = `
+        SELECT c.*, s.*, u.*, m.*, i.*
+        FROM clientes c
+        JOIN sistemas s ON c.id_cliente = s.id_cliente
+        JOIN ubicaciones u ON s.id_ubicacion = u.id_ubicacion
+        JOIN modulos m ON s.id_sistema = m.id_sistema
+        JOIN inversores i ON s.id_sistema = i.id_sistema
+        WHERE c.id_cliente = ?
+    `;
+
+    conexion.query(query, [id_cliente], (error, results) => {
+        if (error) {
+            res.status(500).send('Error al generar PDF');
+            return;
+        }
+
+        const datos = results[0];
+
+        // Información del cliente
+        doc.fontSize(12)
+           .text(`Cliente: ${datos.nombre_cliente}`)
+           .text(`Referencia: ${datos.referencia}`)
+           .text(`Ubicación: ${datos.direccion}`)
+           .moveDown();
+
+        // Detalles del sistema
+        doc.fontSize(14)
+           .text('Especificaciones del Sistema', {underline: true})
+           .fontSize(12)
+           .text(`Tipo de Sistema: ${datos.tipo_sistema}`)
+           .text(`Potencia Pico: ${datos.potencia_pico} kWp`)
+           .text(`Módulos: ${datos.modulos_utilizar} x ${datos.potencia_nominal_salida}W ${datos.marca_modulo}`)
+           .text(`Inversor: ${datos.marca_inversor} ${datos.potencia_inversor}W`)
+           .moveDown();
+
+        // Finalizar PDF
+        doc.end();
+    });
+});
+
 const port = 3000;
 app.listen(port, () => {
     console.log(`Servidor iniciado en http://localhost:${port}`);
