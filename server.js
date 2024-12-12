@@ -209,7 +209,7 @@ app.get('/obtenerDatosCompletos/:id_cliente', (req, res) => {
 //eliminar registro
 app.delete('/eliminarRegistro/:id_cliente', (req, res) => {
     const id_cliente = req.params.id_cliente;
-    
+
     const query = `
         DELETE c, s, u, m, i, co
         FROM clientes c
@@ -230,64 +230,278 @@ app.delete('/eliminarRegistro/:id_cliente', (req, res) => {
     });
 });
 
-
-//PDF
-const PDFDocument = require('pdfkit');
+//GENERAR PDF
+const PDFDocument = require('pdfkit-table');
 const fs = require('fs');
 
+const configurarEstilosBase = (doc) => {
+    doc.font('Helvetica');
+    doc.fontSize(12);
+    doc.fillColor('#333333');
+};
+
+const crearHeaderMejorado = (doc) => {
+    const logoPath = path.join(__dirname, 'public', 'views', 'Images', 'LogoTSolar.jpg');
+    const tSolarPath = path.join(__dirname, 'public', 'views', 'Images', 'TSOLAR.jpeg');
+
+    if (fs.existsSync(logoPath)) {
+        doc.image(logoPath, 50, 40, { width: 100 });
+    }
+
+    doc.font('Helvetica-Bold')
+        .fontSize(10)
+        .fillColor('#666666')
+        .text('Tecnología Solar de México S.A. de C.V.', 180, 45)
+        .fontSize(9)
+        .text('Tel: (999) 999-9999', 180, 60)
+        .text('www.tsolarmex.com', 180, 75);
+
+    if (fs.existsSync(tSolarPath)) {
+        doc.image(tSolarPath, 400, 40, { width: 150, height: 60 });
+    }
+};
+
+const agregarPiePaginaMejorado = (doc) => {
+    const totalPages = doc.bufferedPageRange().count;
+    for (let i = 0; i < totalPages; i++) {
+        doc.switchToPage(i);
+
+        doc.moveTo(50, doc.page.height - 60)
+            .lineTo(545, doc.page.height - 60)
+            .lineWidth(0.5)
+            .strokeColor('#2c88b0')
+            .stroke();
+
+        doc.fontSize(8)
+            .fillColor('#666666')
+            .text('DOCUMENTO CONFIDENCIAL',
+                50,
+                doc.page.height - 50,
+                { align: 'left', width: 200 })
+            .text('Tecnología Solar de México S.A. de C.V. | RFC: TSM123456789',
+                { align: 'center', width: 495 })
+            .text(`Página ${i + 1} de ${totalPages}`,
+                { align: 'right', width: 495 });
+    }
+};
+
 app.get('/generarPDF/:id_cliente', (req, res) => {
-    const id_cliente = req.params.id_cliente;
-    const doc = new PDFDocument({margin: 50});
+    const doc = new PDFDocument({
+        size: 'A4',
+        margins: {
+            top: 120,
+            bottom: 80,
+            left: 50,
+            right: 50
+        },
+        bufferPages: true
+    });
 
-    // Configuración del documento
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename=propuesta_tecnica.pdf');
     doc.pipe(res);
-    
-    // Encabezado con logo
-    doc.image('public/Images/LogoTSolar.jpg', 50, 45, {width: 100})
-       .fontSize(20)
-       .text('Propuesta Técnica Económica', 200, 45)
-       .moveDown();
 
-    // Consulta a la base de datos
     const query = `
-        SELECT c.*, s.*, u.*, m.*, i.*
-        FROM clientes c
+        SELECT 
+            c.*,
+            s.*,
+            u.*,
+            m.*,
+            i.*,
+            e.nombre_estado,
+            e.irradiacion_solar,
+            GROUP_CONCAT(
+                JSON_OBJECT(
+                    'bimestre', (@row_number:=@row_number + 1),
+                    'inicio', DATE_FORMAT(co.fecha_inicio, '%d/%m/%Y'),
+                    'fin', DATE_FORMAT(co.fecha_termino, '%d/%m/%Y'),
+                    'consumo', co.consumo_energetico,
+                    'dias', co.dias_totales
+                )
+                ORDER BY co.fecha_inicio
+            ) as consumos_json
+        FROM (SELECT @row_number:=0) r, clientes c
         JOIN sistemas s ON c.id_cliente = s.id_cliente
         JOIN ubicaciones u ON s.id_ubicacion = u.id_ubicacion
         JOIN modulos m ON s.id_sistema = m.id_sistema
         JOIN inversores i ON s.id_sistema = i.id_sistema
+        JOIN estados e ON u.id_estado = e.id_estado
+        JOIN consumos co ON s.id_sistema = co.id_sistema
         WHERE c.id_cliente = ?
-    `;
+        GROUP BY c.id_cliente`;
 
-    conexion.query(query, [id_cliente], (error, results) => {
+    conexion.query(query, [req.params.id_cliente], async (error, results) => {
         if (error) {
-            res.status(500).send('Error al generar PDF');
-            return;
+            console.error('Error en la consulta:', error);
+            return res.status(500).send('Error al generar PDF');
         }
 
         const datos = results[0];
+        const consumos = JSON.parse(`[${datos.consumos_json}]`);
 
-        // Información del cliente
-        doc.fontSize(12)
-           .text(`Cliente: ${datos.nombre_cliente}`)
-           .text(`Referencia: ${datos.referencia}`)
-           .text(`Ubicación: ${datos.direccion}`)
-           .moveDown();
+        try {
+            // PORTADA
+            crearHeaderMejorado(doc);
+            doc.rect(0, 130, 595.28, 80)
+                .fill('#1a5f7a');
 
-        // Detalles del sistema
-        doc.fontSize(14)
-           .text('Especificaciones del Sistema', {underline: true})
-           .fontSize(12)
-           .text(`Tipo de Sistema: ${datos.tipo_sistema}`)
-           .text(`Potencia Pico: ${datos.potencia_pico} kWp`)
-           .text(`Módulos: ${datos.modulos_utilizar} x ${datos.potencia_nominal_salida}W ${datos.marca_modulo}`)
-           .text(`Inversor: ${datos.marca_inversor} ${datos.potencia_inversor}W`)
-           .moveDown();
+            doc.fontSize(28)
+                .fillColor('#ffffff')
+                .text('PROPUESTA TÉCNICA', 0, 155, {
+                    align: 'center',
+                    width: 595.28
+                });
 
-        // Finalizar PDF
-        doc.end();
+            doc.fontSize(20)
+                .text('SISTEMA FOTOVOLTAICO', 0, 185, {
+                    align: 'center',
+                    width: 595.28
+                });
+
+            doc.rect(150, 280, 295.28, 60)
+                .fillAndStroke('#2c88b0', '#1a5f7a');
+
+            doc.fontSize(24)
+                .fillColor('#ffffff')
+                .text(datos.tipo_sistema, 0, 300, {
+                    align: 'center',
+                    width: 595.28
+                });
+
+            doc.fontSize(16)
+                .fillColor('#1a5f7a')
+                .text(`Cliente: ${datos.nombre_cliente}`, 0, 400, {
+                    align: 'center',
+                    width: 595.28
+                });
+
+            const fechaFormateada = new Date().toLocaleDateString('es-MX', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            doc.fontSize(14)
+                .text(fechaFormateada, 0, 430, {
+                    align: 'center',
+                    width: 595.28
+                });
+
+            doc.rect(150, 500, 295.28, 2)
+                .fill('#2c88b0');
+
+            // 1. DATOS DEL CLIENTE
+            doc.addPage();
+            crearHeaderMejorado(doc);
+            doc.fontSize(16)
+                .fillColor('#1a5f7a')
+                .text('1. DATOS DEL CLIENTE', 50, 150)
+                .moveDown();
+
+            const datosCliente = [
+                ['Referencia:', datos.referencia],
+                ['Nombre:', datos.nombre_cliente],
+                ['Teléfono:', datos.telefono],
+                ['Correo:', datos.correo],
+                ['Dirección:', datos.direccion],
+                ['Estado:', datos.nombre_estado],
+                ['Tipo de Propiedad:', datos.tipo_propiedad]
+            ];
+
+            datosCliente.forEach(([label, value]) => {
+                doc.fontSize(12)
+                    .fillColor('#2c88b0')
+                    .text(label, 50, null, { continued: true })
+                    .fillColor('#333333')
+                    .text(`  ${value}`)
+                    .moveDown();
+            });
+
+            // 2. ANÁLISIS DE CONSUMO
+            doc.addPage();
+            crearHeaderMejorado(doc);
+            doc.fontSize(16)
+                .fillColor('#1a5f7a')
+                .text('2. ANÁLISIS DE CONSUMO', 50, 150)
+                .moveDown();
+
+            const promedios = [
+                ['Promedio Diario:', `${parseFloat(datos.promedio_diario).toFixed(2)} kWh`],
+                ['Promedio Mensual:', `${parseFloat(datos.promedio_mensual).toFixed(2)} kWh`],
+                ['Promedio Anual:', `${parseFloat(datos.promedio_anual).toFixed(2)} kWh`]
+            ];
+
+            promedios.forEach(([label, value]) => {
+                doc.fontSize(12)
+                    .fillColor('#2c88b0')
+                    .text(label, 50, null, { continued: true })
+                    .fillColor('#333333')
+                    .text(`  ${value}`)
+                    .moveDown();
+            });
+
+            doc.moveDown();
+            doc.fontSize(14)
+                .fillColor('#1a5f7a')
+                .text('Histórico de Consumos Bimestrales')
+                .moveDown();
+
+            const tableData = {
+                headers: ['Bimestre', 'Periodo', 'Días', 'Consumo (kWh)'],
+                rows: consumos.map((c, i) => [
+                    `Bimestre ${i + 1}`,
+                    `${c.inicio} - ${c.fin}`,
+                    c.dias,
+                    c.consumo
+                ])
+            };
+
+            await doc.table(tableData, {
+                prepareHeader: () => doc.font('Helvetica-Bold').fontSize(12),
+                prepareRow: () => doc.font('Helvetica').fontSize(11),
+                width: 495,
+                padding: 5,
+                align: 'center'
+            });
+
+            // 3. ESPECIFICACIONES TÉCNICAS
+            doc.addPage();
+            crearHeaderMejorado(doc);
+            doc.fontSize(16)
+                .fillColor('#1a5f7a')
+                .text('3. ESPECIFICACIONES TÉCNICAS', 50, 150)
+                .moveDown();
+
+            const datosTecnicos = [
+                ['Tipo de Sistema:', datos.tipo_sistema],
+                ['Potencia Pico:', `${parseFloat(datos.potencia_pico).toFixed(2)} kWp`],
+                ['Irradiación Solar:', `${datos.irradiacion_solar} kWh/m²/día`],
+                ['Marca de Módulos:', datos.marca_modulo],
+                ['Potencia de Módulos:', `${parseFloat(datos.potencia_nominal_salida)} W`],
+                ['Cantidad de Módulos:', datos.modulos_utilizar],
+                ['Marca de Inversor:', datos.marca_inversor],
+                ['Potencia de Inversor:', `${parseFloat(datos.potencia_nominal_salida)} W`]
+            ];
+
+            datosTecnicos.forEach(([label, value]) => {
+                doc.fontSize(12)
+                    .fillColor('#2c88b0')
+                    .text(label, 50, null, { continued: true })
+                    .fillColor('#333333')
+                    .text(`  ${value}`)
+                    .moveDown();
+            });
+
+            agregarPiePaginaMejorado(doc);
+            doc.end();
+
+        } catch (err) {
+            console.error('Error al generar el PDF:', err);
+            res.status(500).send('Error al generar el PDF');
+        }
     });
 });
+
 
 const port = 3000;
 app.listen(port, () => {
