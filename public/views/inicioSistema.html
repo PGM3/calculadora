@@ -60,6 +60,7 @@
             <p>&copy; 2024 TECNOLOGÍA SOLAR DE MÉXICO S.A. DE C.V.</p>
         </div>
     </footer>
+<script src="src/controllers/formulas.js"></script>
 
     <script>
         function seleccionarTipoSistema(tipo) {
@@ -127,7 +128,7 @@
         document.addEventListener('DOMContentLoaded', cargarRegistros);
 
 
-        //eliminar egistro
+        //eliminar Registro
         function eliminarRegistro(id_cliente) {
             if (!id_cliente) {
                 Swal.fire('Error', 'ID de cliente no válido', 'error');

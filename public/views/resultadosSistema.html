@@ -109,7 +109,7 @@
         </div>
         <div class="buttons">
             <button class="guardar">Guardar</button>
-            <button class="actualizar" style="display: none;">Actualizar</button> <!-- Ocultar inicialmente -->
+            <button class="actualizar" style="display: none;">Actualizar</button>
             <button class="pdf">PDF</button>
         </div>
     </main>
@@ -119,6 +119,40 @@
         </div>
     </footer>
     <script src="src/controllers/formulas.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('modo') === 'edicion') {
+                // Promedios con formato
+                document.getElementById('potencia-pico').value = parseFloat(localStorage.getItem('potenciaPico')).toFixed(3);
+                document.getElementById('promedio-diario').value = parseFloat(localStorage.getItem('promedioDiario')).toFixed(3);
+                document.getElementById('promedio-mensual').value = parseFloat(localStorage.getItem('promedioMensual')).toFixed(3);
+                document.getElementById('promedio-anual').value = parseFloat(localStorage.getItem('promedioAnual')).toFixed(3);
+
+                // Obtener datos del sistema
+                const idCliente = localStorage.getItem('editandoId');
+                fetch(`/obtenerSistema/${idCliente}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            console.log('Datos del servidor:', data.data);
+
+                            // Módulos
+                            document.getElementById('modulos-utilizar').value = data.data.modulos_utilizar || '';
+                            document.getElementById('potencia-modulo').value = data.data.potencia_modulo || '';
+                            document.getElementById('marca-modulo').value = data.data.marca_modulo || '';
+
+                            // Inversores
+                            document.getElementById('potencia-inversor').value = data.data.potencia_inversor || '';
+                            document.getElementById('marca-inversor').value = data.data.marca_inversor || '';
+                            // Ejecutamos el cálculo automático de módulos e inversores
+                            actualizarComponentes();
+                        }
+                    });
+            }
+        });
+
+    </script>
 </body>
 
 </html>

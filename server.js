@@ -166,44 +166,199 @@ app.get('/obtenerEstados', (req, res) => {
     });
 });
 
-//DATOS PARA EDICION
-app.get('/obtenerDatosCompletos/:id_cliente', (req, res) => {
-    const id_cliente = req.params.id_cliente;
 
-    // Query para obtener todos los datos
-    const queries = {
-        cliente: 'SELECT * FROM clientes WHERE id_cliente = ?',
-        sistema: `
-            SELECT s.*, u.*, m.*, i.*
-            FROM sistemas s
-            JOIN ubicaciones u ON s.id_ubicacion = u.id_ubicacion
-            JOIN modulos m ON s.id_sistema = m.id_sistema
-            JOIN inversores i ON s.id_sistema = i.id_sistema
-            WHERE s.id_cliente = ?
-        `,
-        bimestres: 'SELECT * FROM consumos WHERE id_sistema = (SELECT id_sistema FROM sistemas WHERE id_cliente = ?)'
-    };
+// Ruta para obtener un sistema específico
+app.get('/obtenerSistema/:id_cliente', (req, res) => {
+    const query = `
+    SELECT
+        c.referencia,
+        c.nombre_cliente,
+        c.telefono,
+        c.correo,
+        s.id_sistema,
+        s.tipo_sistema,
+        m.modulos_utilizar,
+        m.potencia_nominal_salida as potencia_modulo,
+        m.marca_modulo,
+        i.potencia_nominal_salida as potencia_inversor,
+        i.marca_inversor,
+        u.direccion,
+        u.tipo_propiedad,
+        u.id_estado,
+        e.irradiacion_solar,
+        GROUP_CONCAT(
+            JSON_OBJECT(
+                'fecha_inicio', DATE_FORMAT(co.fecha_inicio, '%Y-%m-%d'),
+                'fecha_termino', DATE_FORMAT(co.fecha_termino, '%Y-%m-%d'),
+                'consumo_energetico', co.consumo_energetico,
+                'dias_totales', co.dias_totales
+            )
+        ) as consumos_json
+    FROM sistemas s
+    JOIN clientes c ON s.id_cliente = c.id_cliente
+    JOIN modulos m ON s.id_sistema = m.id_sistema
+    JOIN inversores i ON s.id_sistema = i.id_sistema
+    JOIN ubicaciones u ON s.id_ubicacion = u.id_ubicacion
+    JOIN estados e ON u.id_estado = e.id_estado
+    JOIN consumos co ON s.id_sistema = co.id_sistema
+    WHERE s.id_cliente = ?
+    GROUP BY s.id_sistema`;
 
-    // Ejecutar queries
-    conexion.query(queries.cliente, [id_cliente], (error, clienteResults) => {
-        if (error) return res.status(500).json({ success: false, message: 'Error al obtener datos del cliente' });
+    conexion.query(query, [req.params.id_cliente], (error, results) => {
+        if (error) {
+            console.log('Error:', error);
+            return res.status(500).json({ success: false, message: 'Error en consulta' });
+        }
+        console.log('Datos encontrados:', results[0]);
+        res.json({ success: true, data: results[0] });
+    });
+});
 
-        conexion.query(queries.sistema, [id_cliente], (error, sistemaResults) => {
-            if (error) return res.status(500).json({ success: false, message: 'Error al obtener datos del sistema' });
+app.put('/actualizarSistemaFotovoltaico', (req, res) => {
+    const {
+        id,
+        referencia,
+        cliente,
+        telefono,
+        correo,
+        tipoSistema,
+        datosBimestres,
+        totalDias,
+        ubicacion,
+        tipoPropiedad,
+        id_estado,
+        potenciaPico,
+        promedioDiario,
+        promedioMensual,
+        promedioAnual,
+        marcaModulo,
+        potenciaModulo,
+        modulosUtilizar,
+        marcaInversor,
+        potenciaInversor
+    } = req.body;
 
-            conexion.query(queries.bimestres, [id_cliente], (error, bimestresResults) => {
-                if (error) return res.status(500).json({ success: false, message: 'Error al obtener datos de consumos' });
+    conexion.beginTransaction(error => {
+        if (error) {
+            return res.status(500).json({ success: false, message: 'Error al iniciar la transacción' });
+        }
 
-                res.json({
-                    success: true,
-                    cliente: clienteResults[0],
-                    sistema: sistemaResults[0],
-                    bimestres: bimestresResults
+        // Actualizar cliente
+        const queryCliente = `
+            UPDATE clientes 
+            SET referencia = ?, nombre_cliente = ?, telefono = ?, correo = ?
+            WHERE id_cliente = ?`;
+
+        conexion.query(queryCliente, [referencia, cliente, telefono, correo, id], (error) => {
+            if (error) {
+                return conexion.rollback(() => {
+                    res.status(500).json({ success: false, message: 'Error al actualizar cliente' });
+                });
+            }
+
+            // Actualizar ubicación
+            const queryUbicacion = `
+                UPDATE ubicaciones u
+                JOIN sistemas s ON s.id_ubicacion = u.id_ubicacion
+                SET u.direccion = ?, u.tipo_propiedad = ?, u.id_estado = ?
+                WHERE s.id_cliente = ?`;
+
+            conexion.query(queryUbicacion, [ubicacion, tipoPropiedad, id_estado, id], (error) => {
+                if (error) {
+                    return conexion.rollback(() => {
+                        res.status(500).json({ success: false, message: 'Error al actualizar ubicación' });
+                    });
+                }
+
+                // Actualizar sistema
+                const querySistema = `
+                    UPDATE sistemas 
+                    SET tipo_sistema = ?, potencia_pico = ?, promedio_diario = ?, 
+                        promedio_mensual = ?, promedio_anual = ?
+                    WHERE id_cliente = ?`;
+
+                conexion.query(querySistema, [tipoSistema, potenciaPico, promedioDiario, promedioMensual, promedioAnual, id], (error) => {
+                    if (error) {
+                        return conexion.rollback(() => {
+                            res.status(500).json({ success: false, message: 'Error al actualizar sistema' });
+                        });
+                    }
+
+                    // Actualizar módulos
+                    const queryModulos = `
+                        UPDATE modulos m
+                        JOIN sistemas s ON s.id_sistema = m.id_sistema
+                        SET m.marca_modulo = ?, m.potencia_nominal_salida = ?, m.modulos_utilizar = ?
+                        WHERE s.id_cliente = ?`;
+
+                    conexion.query(queryModulos, [marcaModulo, potenciaModulo, modulosUtilizar, id], (error) => {
+                        if (error) {
+                            return conexion.rollback(() => {
+                                res.status(500).json({ success: false, message: 'Error al actualizar módulos' });
+                            });
+                        }
+
+                        // Actualizar inversores
+                        const queryInversores = `
+                            UPDATE inversores i
+                            JOIN sistemas s ON s.id_sistema = i.id_sistema
+                            SET i.marca_inversor = ?, i.potencia_nominal_salida = ?
+                            WHERE s.id_cliente = ?`;
+
+                        conexion.query(queryInversores, [marcaInversor, potenciaInversor, id], (error) => {
+                            if (error) {
+                                return conexion.rollback(() => {
+                                    res.status(500).json({ success: false, message: 'Error al actualizar inversores' });
+                                });
+                            }
+
+                            // Actualizar consumos
+                            datosBimestres.forEach((bimestre, index) => {
+                                const queryUpdateConsumo = `
+                                    UPDATE consumos c
+                                    JOIN sistemas s ON c.id_sistema = s.id_sistema
+                                    SET 
+                                        c.fecha_inicio = ?,
+                                        c.fecha_termino = ?,
+                                        c.consumo_energetico = ?,
+                                        c.dias_totales = ?
+                                    WHERE s.id_cliente = ? 
+                                    AND c.fecha_inicio = ?`;
+
+                                conexion.query(queryUpdateConsumo, [
+                                    bimestre.inicio,
+                                    bimestre.fin,
+                                    bimestre.consumo,
+                                    bimestre.totalDias,
+                                    id,
+                                    bimestre.inicio
+                                ], (error) => {
+                                    if (error) {
+                                        return conexion.rollback(() => {
+                                            res.status(500).json({ success: false, message: 'Error al actualizar consumo' });
+                                        });
+                                    }
+
+                                    if (index === datosBimestres.length - 1) {
+                                        conexion.commit(error => {
+                                            if (error) {
+                                                return conexion.rollback(() => {
+                                                    res.status(500).json({ success: false, message: 'Error al confirmar los cambios' });
+                                                });
+                                            }
+                                            res.json({ success: true, message: 'Sistema actualizado exitosamente' });
+                                        });
+                                    }
+                                });
+                            });
+                        });
+                    });
                 });
             });
         });
     });
 });
+
 
 
 //eliminar registro
@@ -548,6 +703,16 @@ app.get('/generarPDF/:id_cliente', async (req, res) => {
         doc.end();
     });
 });
+
+//para el traductor de google
+app.use((req, res, next) => {
+    res.setHeader(
+        'Content-Security-Policy',
+        "default-src 'self'; style-src 'self' 'unsafe-inline' https://www.gstatic.com;"
+    );
+    next();
+});
+
 
 // Iniciar el servidor
 const port = 3000;
