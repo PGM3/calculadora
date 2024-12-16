@@ -495,7 +495,12 @@ app.get('/generarPDF/:id_cliente', async (req, res) => {
 
     const query = `
         SELECT 
-            c.*, s.*, u.*, m.*, i.*,
+            c.*, s.*, u.*,
+            m.modulos_utilizar,
+        m.potencia_nominal_salida as potencia_modulo,
+        m.marca_modulo,
+        i.potencia_nominal_salida as potencia_inversor,
+        i.marca_inversor,
             e.nombre_estado, e.irradiacion_solar,
             GROUP_CONCAT(
                 JSON_OBJECT(
@@ -659,12 +664,13 @@ app.get('/generarPDF/:id_cliente', async (req, res) => {
             ['Tipo de Sistema:', datos.tipo_sistema],
             ['Potencia Pico:', `${datos.potencia_pico} kWp`],
             ['Marca de Módulos:', datos.marca_modulo],
-            ['Potencia de Módulos:', `${datos.potencia_nominal_salida} W`],
+            ['Potencia de Módulos:', `${datos.potencia_modulo} W`],
             ['Cantidad de Módulos:', datos.modulos_utilizar],
             ['Marca de Inversor:', datos.marca_inversor],
-            ['Potencia de Inversor:', `${datos.potencia_nominal_salida} W`]
+            ['Potencia de Inversor:', `${datos.potencia_inversor} W`]
         ];
 
+        
         datosTecnicos.forEach(([label, value]) => {
             doc.fontSize(12)
                 .fillColor('#2c88b0')
@@ -687,7 +693,7 @@ app.get('/generarPDF/:id_cliente', async (req, res) => {
             })
             .moveDown();
 
-        doc.text(`El sistema consiste en un arreglo serie de ${datos.modulos_utilizar} módulos fotovoltaicos de ${datos.potencia_nominal_salida} Wh ${datos.marca_modulo}, cuya generación eléctrica será inyectada a la red mediante un inversor CD/CA de ${datos.potencia_nominal_salida} kwp el cual cumple con las normas de CFE.`, {
+        doc.text(`El sistema consiste en un arreglo serie de ${datos.modulos_utilizar} módulos fotovoltaicos de ${datos.potencia_modulo} Wh ${datos.marca_modulo}, cuya generación eléctrica será inyectada a la red mediante un inversor CD/CA de ${datos.potencia_inversor} kwp el cual cumple con las normas de CFE.`, {
             align: 'justify',
             width: 495
         })

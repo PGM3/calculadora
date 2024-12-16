@@ -90,6 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return { numeroModulos, potenciaInversorRequerida };
         }
 
+
         function actualizarComponentes() {
             const potenciaModulo = parseFloat(potenciaModuloInput.value) || 0;
             const potenciaPicoVal = parseFloat(potenciaPicoInput.value) || 0;
