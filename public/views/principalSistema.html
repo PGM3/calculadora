@@ -119,17 +119,54 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Obtener elementos del DOM
+        const urlParams = new URLSearchParams(window.location.search);
         const estadoSelect = document.getElementById('estado');
         const irradiacionSolarInput = document.getElementById('irradiacion_solar');
         const continuarBtn = document.querySelector('.continuar');
 
-        // Cargar estados
+        // Verificar modo edición y cargar datos
+        // Verificar modo edición y cargar datos
+        if (urlParams.get('modo') === 'edicion') {
+            // Cargar datos de ubicación
+            const ubicacionInput = document.getElementById('ubicacion');
+            const propiedadSelect = document.getElementById('propiedad');
+
+            if (ubicacionInput) ubicacionInput.value = localStorage.getItem('ubicacion');
+            if (propiedadSelect) propiedadSelect.value = localStorage.getItem('tipoPropiedad');
+
+            // Cargar bimestres
+            const bimestres = JSON.parse(localStorage.getItem('datosBimestres') || '[]');
+            console.log('Bimestres a cargar:', bimestres); // Para verificar los datos
+
+            // Mapeo de nombres para los inputs
+            const inputsPorBimestre = [
+                { inicio: 'iniPrimero', fin: 'finPrimero', consumo: 'cprimero' },
+                { inicio: 'iniSegundo', fin: 'finSegundo', consumo: 'cSegundo' },
+                { inicio: 'iniTercero', fin: 'finTercero', consumo: 'cTercero' },
+                { inicio: 'iniCuarto', fin: 'finCuarto', consumo: 'cCuarto' },
+                { inicio: 'iniQuinto', fin: 'finQuinto', consumo: 'cQuinto' },
+                { inicio: 'iniSexto', fin: 'finSexto', consumo: 'cSexto' }
+            ];
+
+            bimestres.forEach((bimestre, index) => {
+                if (inputsPorBimestre[index]) {
+                    const inputs = inputsPorBimestre[index];
+                    document.getElementById(inputs.inicio).value = bimestre.fecha_inicio;
+                    document.getElementById(inputs.fin).value = bimestre.fecha_termino;
+                    document.getElementById(inputs.consumo).value = bimestre.consumo_energetico;
+                }
+            });
+        }
+
+        // Obtener los estados de la base de datos y rellenar el select
         fetch('/obtenerEstados')
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    estadoSelect.innerHTML = '<option value="" disabled selected>Seleccione un estado</option>';
+                    estadoSelect.innerHTML = `
+                    <option value="" disabled selected>Seleccione un estado</option>
+                `;
+
                     data.data.forEach(estado => {
                         const option = document.createElement('option');
                         option.value = estado.id_estado;
@@ -138,68 +175,26 @@
                         estadoSelect.appendChild(option);
                     });
 
-                    // Si estamos en modo edición, cargar los datos
-                    const urlParams = new URLSearchParams(window.location.search);
+                    // Si estamos en modo edición, seleccionar el estado guardado
                     if (urlParams.get('modo') === 'edicion') {
-                        const estadoGuardado = localStorage.getItem('estadoSeleccionado');
-                        if (estadoGuardado) {
-                            estadoSelect.value = estadoGuardado;
-                            const selectedOption = estadoSelect.options[estadoSelect.selectedIndex];
-                            irradiacionSolarInput.value = selectedOption.getAttribute('data-irradiacion');
-                        }
+                        estadoSelect.value = localStorage.getItem('estadoSeleccionado');
+                        const selectedOption = estadoSelect.options[estadoSelect.selectedIndex];
+                        irradiacionSolarInput.value = selectedOption.getAttribute('data-irradiacion');
                     }
+                } else {
+                    console.error('Error al obtener los estados:', data.message);
                 }
-            });
+            })
+            .catch(error => console.error('Error en la solicitud:', error));
 
-        // Cargar datos en modo edición
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('modo') === 'edicion') {
-            // Cargar datos de ubicación
-            const ubicacionInput = document.getElementById('ubicacion');
-            const propiedadSelect = document.getElementById('propiedad');
-
-            if (ubicacionInput) ubicacionInput.value = localStorage.getItem('ubicacion');
-            if (propiedadSelect) propiedadSelect.value = localStorage.getItem('tipoPropiedad');
-            if (estadoSelect) estadoSelect.value = localStorage.getItem('estadoSeleccionado');
-
-            // Cargar bimestres
-            const bimestres = JSON.parse(localStorage.getItem('datosBimestres') || '[]');
-
-            // IDs exactos de tu HTML
-            document.getElementById('iniPrimero').value = bimestres[0]?.fecha_inicio || '';
-            document.getElementById('finPrimero').value = bimestres[0]?.fecha_termino || '';
-            document.getElementById('cprimero').value = bimestres[0]?.consumo_energetico || '';
-
-            document.getElementById('iniSegundo').value = bimestres[1]?.fecha_inicio || '';
-            document.getElementById('finSegundo').value = bimestres[1]?.fecha_termino || '';
-            document.getElementById('cSegundo').value = bimestres[1]?.consumo_energetico || '';
-
-            document.getElementById('iniTercero').value = bimestres[2]?.fecha_inicio || '';
-            document.getElementById('finTercero').value = bimestres[2]?.fecha_termino || '';
-            document.getElementById('cTercero').value = bimestres[2]?.consumo_energetico || '';
-
-            document.getElementById('iniCuarto').value = bimestres[3]?.fecha_inicio || '';
-            document.getElementById('finCuarto').value = bimestres[3]?.fecha_termino || '';
-            document.getElementById('cCuarto').value = bimestres[3]?.consumo_energetico || '';
-
-            document.getElementById('iniQuinto').value = bimestres[4]?.fecha_inicio || '';
-            document.getElementById('finQuinto').value = bimestres[4]?.fecha_termino || '';
-            document.getElementById('cQuinto').value = bimestres[4]?.consumo_energetico || '';
-
-            document.getElementById('iniSexto').value = bimestres[5]?.fecha_inicio || '';
-            document.getElementById('finSexto').value = bimestres[5]?.fecha_termino || '';
-            document.getElementById('cSexto').value = bimestres[5]?.consumo_energetico || '';
-
-            // Cargar datos de módulos e inversores
-            const datosModulos = {
-                modulosUtilizar: localStorage.getItem('modulosUtilizar'),
-                potenciaModulo: localStorage.getItem('potenciaModulo'),
-                marcaModulo: localStorage.getItem('marcaModulo'),
-                potenciaInversor: localStorage.getItem('potenciaInversor'),
-                marcaInversor: localStorage.getItem('marcaInversor')
-            };
-            localStorage.setItem('datosModulos', JSON.stringify(datosModulos));
-        }
+        // Cambiar el valor de irradiación solar al seleccionar un estado
+        estadoSelect.addEventListener('change', () => {
+            const selectedOption = estadoSelect.options[estadoSelect.selectedIndex];
+            const irradiacionSolar = selectedOption.getAttribute('data-irradiacion');
+            localStorage.setItem('estadoSeleccionado', estadoSelect.value);
+            irradiacionSolarInput.value = irradiacionSolar || '';
+            localStorage.setItem('irradiacionSolar', irradiacionSolar || '');
+        });
 
         // Botón Continuar para validar y guardar datos
         if (continuarBtn) {
@@ -213,28 +208,27 @@
                     const estadoId = estadoSelect.value;
                     const irradiacionSolar = parseFloat(irradiacionSolarInput.value) || 0;
 
-                    // Guardar los datos en el almacenamiento local
                     localStorage.setItem('ubicacion', ubicacion);
                     localStorage.setItem('tipoPropiedad', tipoPropiedad);
                     localStorage.setItem('estadoSeleccionado', estadoId);
                     localStorage.setItem('irradiacionSolar', irradiacionSolar);
 
-                    // Guardar datos de módulos e inversores antes de redirigir
                     const datosModulos = {
                         modulosUtilizar: localStorage.getItem('modulosUtilizar'),
                         potenciaModulo: localStorage.getItem('potenciaModulo'),
                         potenciaInversor: localStorage.getItem('potenciaInversor')
                     };
                     localStorage.setItem('datosModulos', JSON.stringify(datosModulos));
-                  
-                    window.location.href = 'resultadosSistema.html?modo=edicion';
+
+                    window.location.href = urlParams.get('modo') === 'edicion' ?
+                        'resultadosSistema.html?modo=edicion' :
+                        'resultadosSistema.html';
                 }
             });
         }
     });
 
 </script>
-
 
 <!-- <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -299,6 +293,49 @@
                 }
             });
         } -->
+
+<!-- // codigo cortado de edicion 
+ // Cargar datos en modo edición
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('modo') === 'edicion') {
+            const estadoGuardado = localStorage.getItem('estadoSeleccionado');
+            if (estadoGuardado) {
+                estadoSelect.value = estadoGuardado;
+                const selectedOption = estadoSelect.options[estadoSelect.selectedIndex];
+                irradiacionSolarInput.value = selectedOption.getAttribute('data-irradiacion');
+            }
+
+            // Cargar datos de ubicación
+            const ubicacionInput = document.getElementById('ubicacion');
+            const propiedadSelect = document.getElementById('propiedad');
+
+            if (ubicacionInput) ubicacionInput.value = localStorage.getItem('ubicacion');
+            if (propiedadSelect) propiedadSelect.value = localStorage.getItem('tipoPropiedad');
+
+            // Cargar bimestres
+            const bimestres = JSON.parse(localStorage.getItem('datosBimestres') || '[]');
+
+            // IDs exactos de tu HTML
+            for (let i = 0; i < bimestres.length; i++) {
+                document.getElementById(`ini${i + 1}`).value = bimestres[i]?.fecha_inicio || '';
+                document.getElementById(`fin${i + 1}`).value = bimestres[i]?.fecha_termino || '';
+                document.getElementById(`c${i + 1}`).value = bimestres[i]?.consumo_energetico || '';
+            }
+
+            // Cargar datos de módulos e inversores
+            const datosModulos = {
+                modulosUtilizar: localStorage.getItem('modulosUtilizar'),
+                potenciaModulo: localStorage.getItem('potenciaModulo'),
+                marcaModulo: localStorage.getItem('marcaModulo'),
+                potenciaInversor: localStorage.getItem('potenciaInversor'),
+                marcaInversor: localStorage.getItem('marcaInversor')
+            };
+            localStorage.setItem('datosModulos', JSON.stringify(datosModulos));
+        }
+-->
+
+
+
 
 <!-- });
 </>

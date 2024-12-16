@@ -132,30 +132,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Configuración del botón Guardar
+    // // Configuración del botón Guardar
+    // const guardarBtn = document.querySelector('.guardar');
+    // if (guardarBtn) {
+    //     guardarBtn.addEventListener('click', guardarDatos);
+    // }
+
+    // //EDITAR DATOS
     const guardarBtn = document.querySelector('.guardar');
-    if (guardarBtn) {
-        guardarBtn.addEventListener('click', guardarDatos);
-    }
-
-    //EDITAR DATOS
-    const urlParams = new URLSearchParams(window.location.search);
-    const modoEdicion = urlParams.get('modo') === 'edicion';
     const actualizarBtn = document.querySelector('.actualizar');
+    const urlParams = new URLSearchParams(window.location.search);
+    const modoEdicion = urlParams.get('modo') === 'edicion' && localStorage.getItem('editandoId');
 
-    if (modoEdicion) {
-        if (guardarBtn) guardarBtn.style.display = 'none';
-        if (actualizarBtn) actualizarBtn.style.display = 'block';
-    } else {
-        if (guardarBtn) guardarBtn.style.display = 'block';
-        if (actualizarBtn) actualizarBtn.style.display = 'none';
+    if (guardarBtn && actualizarBtn) {
+        if (modoEdicion) {
+            guardarBtn.style.display = 'none';
+            actualizarBtn.style.display = 'block';
+            actualizarBtn.addEventListener('click', actualizarDatos);
+        } else {
+            guardarBtn.style.display = 'block';
+            actualizarBtn.style.display = 'none';
+            guardarBtn.addEventListener('click', guardarDatos);
+        }
     }
-
-    // Evento para el botón actualizar
-    if (actualizarBtn) {
-        actualizarBtn.addEventListener('click', actualizarDatos);
-    }
-
 
     //TIPO DE SISTEMA
     // Dentro del DOMContentLoaded
@@ -296,6 +295,7 @@ async function guardarDatos() {
 // Función para cargar datos del registro seleccionado
 async function editarRegistro(idCliente) {
     try {
+        localStorage.setItem('editandoId', idCliente);
         const response = await fetch(`/obtenerSistema/${idCliente}`);
         const { data } = await response.json();
 
@@ -310,7 +310,9 @@ async function editarRegistro(idCliente) {
         // Datos de módulos e inversores
         localStorage.setItem('modulosUtilizar', data.modulos_utilizar);
         localStorage.setItem('potenciaModulo', data.potencia_modulo);
+        localStorage.setItem('marcaModulo', data.marca_modulo);
         localStorage.setItem('potenciaInversor', data.potencia_inversor);
+        localStorage.setItem('marcaInversor', data.marca_inversor);
 
 
         // Datos de ubicación

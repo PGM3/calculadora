@@ -530,6 +530,19 @@ app.get('/generarPDF/:id_cliente', async (req, res) => {
         const datos = results[0];
         const consumos = JSON.parse(`[${datos.consumos_json}]`);
 
+        //FECHAS PARA EL PDF
+        // Extraer la primera fecha de inicio (más antigua) y la última fecha de fin (más reciente) 
+        let fechaInicio = consumos[0].inicio; // Inicializar con la primera fecha de inicio 
+        let fechaFin = consumos[0].fin; // Inicializar con la primera fecha de fin
+
+        // Iterar sobre todos los consumos para encontrar las fechas correctas 
+        consumos.forEach(consumo => { // Comparar fechas de inicio 
+            if (new Date(consumo.inicio.split('/').reverse().join('-')) < new Date(fechaInicio.split('/').reverse().join('-'))) { fechaInicio = consumo.inicio; }
+            // Comparar fechas de fin 
+            if (new Date(consumo.fin.split('/').reverse().join('-')) > new Date(fechaFin.split('/').reverse().join('-'))) { fechaFin = consumo.fin; }
+        });
+
+
         // Portada
         crearEncabezado();
         doc.rect(0, 130, 595.28, 80).fill('#1a5f7a');
@@ -555,6 +568,7 @@ app.get('/generarPDF/:id_cliente', async (req, res) => {
             ['Teléfono:', datos.telefono],
             ['Correo:', datos.correo],
             ['Ubicación:', datos.direccion],
+            ['Irradiación Solar:', `${datos.irradiacion_solar} kWh/m²/día`],
             ['Estado:', datos.nombre_estado],
             ['Tipo de Propiedad:', datos.tipo_propiedad]
         ];
@@ -574,29 +588,12 @@ app.get('/generarPDF/:id_cliente', async (req, res) => {
         agregarCajaSombreada('ANÁLISIS DE CONSUMO');
 
         doc.fontSize(11).fillColor('#333333')
-            .text('A continuación se presenta el análisis detallado del consumo energético basado en los recibos de CFE, que nos permite dimensionar adecuadamente su sistema fotovoltaico:', 50, doc.y + 10, {
-                align: 'justify',
-                width: 495
-            })
+            .text(`En la siguiente tabla se muestra el consumo de ${datos.nombre_cliente} del último año comprendido en el periodo del día ${fechaInicio.split('/')[0]} del mes de ${fechaInicio.split('/')[1]} del año ${fechaInicio.split('/')[2]} al día ${fechaFin.split('/')[0]} del mes de ${fechaFin.split('/')[1]} del año ${fechaFin.split('/')[2]}.`, 50, doc.y + 10,
+                {
+                    align: 'justify',
+                    width: 495
+                })
             .moveDown();
-
-        const datosConsumo = [
-            ['Promedio Diario:', `${datos.promedio_diario} kWh`],
-            ['Promedio Mensual:', `${datos.promedio_mensual} kWh`],
-            ['Promedio Anual:', `${datos.promedio_anual} kWh`],
-            ['Irradiación Solar:', `${datos.irradiacion_solar} kWh/m²/día`]
-        ];
-
-        datosConsumo.forEach(([label, value]) => {
-            doc.fontSize(12)
-                .fillColor('#2c88b0')
-                .text(label, 50, null, { continued: true })
-                .fillColor('#333333')
-                .text(`  ${value}`)
-                .moveDown();
-        });
-
-        agregarSeparadorVisual();
 
         // Tabla de consumos bimestrales
         doc.fontSize(14).fillColor('#1a5f7a')
@@ -615,7 +612,7 @@ app.get('/generarPDF/:id_cliente', async (req, res) => {
         };
 
         doc.table(tablaDatos, {
-            prepareHeader: () => doc.fontSize(10).fillColor('#ffffff'),
+            prepareHeader: () => doc.fontSize(10).fillColor('#1a5f7a'),
             prepareRow: () => doc.fontSize(10).fillColor('#333333'),
             width: 495,
             headerBackground: '#2c88b0',
@@ -623,6 +620,34 @@ app.get('/generarPDF/:id_cliente', async (req, res) => {
             padding: 5,
             align: ['left', 'center', 'center', 'center', 'right']
         });
+
+        doc.moveDown();
+        agregarSeparadorVisual();
+
+        //Datos de promedio de consumo
+        const datosConsumo = [
+            ['Promedio Diario:', `${datos.promedio_diario} kWh`],
+            ['Promedio Mensual:', `${datos.promedio_mensual} kWh`],
+            ['Consumo Anual:', `${datos.promedio_anual} kWh`],
+        ];
+
+        doc.fontSize(14).fillColor('#1a5f7a')
+            .text('Promedios de Consumo Energético', { align: 'center' });
+
+        doc.fontSize(11).fillColor('#333333')
+            .text(`Se muestran los promedios de consumo diario y mensual de energía eléctrica del cliente, también se muestra el consumo anual del cliente.`, 50, doc.y + 10,
+                { align: 'justify', width: 495 })
+            .moveDown();
+
+        datosConsumo.forEach(([label, value]) => {
+            doc.fontSize(11)
+                .fillColor('#2c88b0')
+                .text(label, 50, null, { continued: true })
+                .fillColor('#333333')
+                .text(`  ${value}`)
+                .moveDown();
+        });
+        doc.moveDown();
 
         agregarSeparadorVisual();
 
@@ -635,6 +660,7 @@ app.get('/generarPDF/:id_cliente', async (req, res) => {
         // Gráfico de consumo
         doc.fontSize(14).fillColor('#1a5f7a')
             .text('Gráfico de Consumo Bimestral', { align: 'center' })
+            .moveDown()
             .fontSize(11).fillColor('#333333')
             .text('Este gráfico representa la tendencia del consumo eléctrico en los últimos bimestres, permitiendo visualizar los patrones de consumo y picos de demanda:', {
                 align: 'justify',
@@ -670,7 +696,7 @@ app.get('/generarPDF/:id_cliente', async (req, res) => {
             ['Potencia de Inversor:', `${datos.potencia_inversor} W`]
         ];
 
-        
+
         datosTecnicos.forEach(([label, value]) => {
             doc.fontSize(12)
                 .fillColor('#2c88b0')
@@ -685,15 +711,16 @@ app.get('/generarPDF/:id_cliente', async (req, res) => {
         crearEncabezado();
         agregarCajaSombreada('DESCRIPCIÓN TÉCNICA DEL SISTEMA PROPUESTO');
 
-        doc.fontSize(11)
-            .fillColor('#333333')
-            .text(`El sistema fotovoltaico propuesto interconectado a la red eléctrica tiene una capacidad de ${datos.potencia_pico} kWp y se estima que tendrá una generación cuatrimestral aproximadamente de ${datos.promedio_anual / 3} kwh.`, {
+        doc.fontSize(11).fillColor('#333333')
+            .text(`El sistema fotovoltaico propuesto interconectado a la red eléctrica tiene una capacidad de ${datos.potencia_pico} kWp 
+                y se estima que tendrá una generación cuatrimestral aproximadamente de ${datos.promedio_anual / 3} kwh.`, 50, doc.y + 10,{
                 align: 'justify',
                 width: 495
             })
             .moveDown();
 
-        doc.text(`El sistema consiste en un arreglo serie de ${datos.modulos_utilizar} módulos fotovoltaicos de ${datos.potencia_modulo} Wh ${datos.marca_modulo}, cuya generación eléctrica será inyectada a la red mediante un inversor CD/CA de ${datos.potencia_inversor} kwp el cual cumple con las normas de CFE.`, {
+        doc.text(`El sistema consiste en un arreglo serie de ${datos.modulos_utilizar} módulos fotovoltaicos de ${datos.potencia_modulo} Wh ${datos.marca_modulo}, 
+            cuya generación eléctrica será inyectada a la red mediante un inversor CD/CA de ${datos.potencia_inversor} kwp el cual cumple con las normas de CFE.`, 50, doc.y + 10, {
             align: 'justify',
             width: 495
         })

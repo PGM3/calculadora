@@ -60,10 +60,11 @@
             <p>&copy; 2024 TECNOLOGÍA SOLAR DE MÉXICO S.A. DE C.V.</p>
         </div>
     </footer>
-<script src="src/controllers/formulas.js"></script>
+    <script src="src/controllers/formulas.js"></script>
 
     <script>
         function seleccionarTipoSistema(tipo) {
+            localStorage.clear();
             // Guardar el tipo en localStorage
             localStorage.setItem('tipoSistema', tipo);
             window.location.href = 'principalSistema.html';
@@ -96,7 +97,7 @@
                             const botones = [
                                 {
                                     clase: 'editar', icono: 'ph--note-pencil-bold', tooltip: 'Editar',
-                                    accion: () => editarRegistro(registro.id_cliente)
+                                    accion: () => iniciarEdicion(registro.id_cliente)
                                 },
                                 {
                                     clase: 'pdf', icono: 'ph--file-pdf-bold', tooltip: 'Ver PDF',
@@ -126,6 +127,28 @@
         }
 
         document.addEventListener('DOMContentLoaded', cargarRegistros);
+
+
+        function iniciarEdicion(id_cliente) {
+            if (!id_cliente) {
+                Swal.fire('Error', 'ID de cliente no válido', 'error');
+                return;
+            }
+
+            Swal.fire({
+                title: '¿Estás seguro de editar este registro?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, Editar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.editarRegistro(id_cliente);
+                }
+            });
+        }
 
 
         //eliminar Registro
@@ -162,10 +185,11 @@
 
         //PDF
         function verPdfRegistro(id_cliente) {
-    window.open(`/generarPDF/${id_cliente}`, '_blank');
-}
+            window.open(`/generarPDF/${id_cliente}`, '_blank');
+        }
 
     </script>
 
 </body>
+
 </html>

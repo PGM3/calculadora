@@ -119,40 +119,45 @@
         </div>
     </footer>
     <script src="src/controllers/formulas.js"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('modo') === 'edicion') {
-                // Promedios con formato
-                document.getElementById('potencia-pico').value = parseFloat(localStorage.getItem('potenciaPico')).toFixed(3);
-                document.getElementById('promedio-diario').value = parseFloat(localStorage.getItem('promedioDiario')).toFixed(3);
-                document.getElementById('promedio-mensual').value = parseFloat(localStorage.getItem('promedioMensual')).toFixed(3);
-                document.getElementById('promedio-anual').value = parseFloat(localStorage.getItem('promedioAnual')).toFixed(3);
+            const modoEdicion = urlParams.get('modo') === 'edicion';
+            const guardarBtn = document.querySelector('.guardar');
+            const actualizarBtn = document.querySelector('.actualizar');
 
-                // Obtener datos del sistema
+            if (modoEdicion) {
+                guardarBtn.style.display = 'none';
+                actualizarBtn.style.display = 'block';
+
                 const idCliente = localStorage.getItem('editandoId');
+                console.log('ID Cliente:', idCliente);
+
                 fetch(`/obtenerSistema/${idCliente}`)
                     .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            console.log('Datos del servidor:', data.data);
+                    .then(resultado => {
+                        console.log('Respuesta completa:', resultado);
 
+                        if (resultado && resultado.data) {
+                            const data = resultado.data;
                             // Módulos
-                            document.getElementById('modulos-utilizar').value = data.data.modulos_utilizar || '';
-                            document.getElementById('potencia-modulo').value = data.data.potencia_modulo || '';
-                            document.getElementById('marca-modulo').value = data.data.marca_modulo || '';
+                            document.getElementById('modulos-utilizar').value = data.modulos_utilizar || '';
+                            document.getElementById('potencia-modulo').value = data.potencia_modulo || '';
+                            document.getElementById('marca-modulo').value = data.marca_modulo || '';
 
                             // Inversores
-                            document.getElementById('potencia-inversor').value = data.data.potencia_inversor || '';
-                            document.getElementById('marca-inversor').value = data.data.marca_inversor || '';
-                            // Ejecutamos el cálculo automático de módulos e inversores
-                            actualizarComponentes();
+                            document.getElementById('potencia-inversor').value = data.potencia_inversor || '';
+                            document.getElementById('marca-inversor').value = data.marca_inversor || '';
                         }
                     });
+            } else {
+                guardarBtn.style.display = 'block';
+                actualizarBtn.style.display = 'none';
             }
         });
 
     </script>
 </body>
 
-</html>
+</html
