@@ -103,3 +103,114 @@ function validarDatosUbicacion() {
 
     return esValido;
 }
+
+//DATOS DE MODULOS E INVERSORES
+function validarDatosModulos() {
+    let esValido = true;
+    
+    const potenciaModulo = document.getElementById('potencia_modulo');
+    const cantidadModulos = document.getElementById('cantidad_modulos');
+    const eficienciaModulo = document.getElementById('eficiencia_modulo');
+    
+    // Limpiar errores previos
+    quitarResaltadoError(potenciaModulo);
+    quitarResaltadoError(cantidadModulos);
+    quitarResaltadoError(eficienciaModulo);
+    
+    // Validar que los campos estén rellenados
+    if (!potenciaModulo.value.trim()) {
+        resaltarError(potenciaModulo, 'Este campo es requerido');
+        esValido = false;
+    }
+    
+    if (!cantidadModulos.value.trim()) {
+        resaltarError(cantidadModulos, 'Este campo es requerido');
+        esValido = false;
+    }
+    
+    if (!eficienciaModulo.value.trim()) {
+        resaltarError(eficienciaModulo, 'Este campo es requerido');
+        esValido = false;
+    }
+    
+    return esValido;
+}
+
+function validarDatosInversores() {
+    let esValido = true;
+    
+    const potenciaInversor = document.getElementById('potencia_inversor');
+    const eficienciaInversor = document.getElementById('eficiencia_inversor');
+    const voltajeInversor = document.getElementById('voltaje_inversor');
+    
+    // Limpiar errores previos
+    quitarResaltadoError(potenciaInversor);
+    quitarResaltadoError(eficienciaInversor);
+    quitarResaltadoError(voltajeInversor);
+    
+    // Validar que los campos estén rellenados
+    if (!potenciaInversor.value.trim()) {
+        resaltarError(potenciaInversor, 'Este campo es requerido');
+        esValido = false;
+    }
+    
+    if (!eficienciaInversor.value.trim()) {
+        resaltarError(eficienciaInversor, 'Este campo es requerido');
+        esValido = false;
+    }
+    
+    if (!voltajeInversor.value.trim()) {
+        resaltarError(voltajeInversor, 'Este campo es requerido');
+        esValido = false;
+    }
+    
+    return esValido;
+}
+
+//nueva para inversor y modulo
+function validarDatosModulosInversores() {
+    let esValido = true;
+    
+    // Validación de módulos
+    const marcaModulo = document.getElementById('marca-modulo');
+    const potenciaModulo = document.getElementById('potencia-modulo');
+    const modulosUtilizar = document.getElementById('modulos-utilizar');
+    
+    // Validación de inversores
+    const marcaInversor = document.getElementById('marca-inversor');
+    const potenciaInversor = document.getElementById('potencia-inversor');
+    
+    // Limpiar errores previos
+    [marcaModulo, potenciaModulo, modulosUtilizar, marcaInversor, potenciaInversor].forEach(input => {
+        quitarResaltadoError(input);
+    });
+    
+    // Validar campos de módulos
+    if (!marcaModulo.value.trim()) {
+        resaltarError(marcaModulo, 'La marca del módulo es requerida');
+        esValido = false;
+    }
+    
+    if (!potenciaModulo.value.trim()) {
+        resaltarError(potenciaModulo, 'La potencia del módulo es requerida');
+        esValido = false;
+    }
+    
+    if (!modulosUtilizar.value.trim()) {
+        resaltarError(modulosUtilizar, 'El número de módulos es requerido');
+        esValido = false;
+    }
+    
+    // Validar campos de inversores
+    if (!marcaInversor.value.trim()) {
+        resaltarError(marcaInversor, 'La marca del inversor es requerida');
+        esValido = false;
+    }
+    
+    if (!potenciaInversor.value.trim()) {
+        resaltarError(potenciaInversor, 'La potencia del inversor es requerida');
+        esValido = false;
+    }
+    
+    return esValido;
+}

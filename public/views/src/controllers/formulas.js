@@ -148,11 +148,114 @@ document.addEventListener('DOMContentLoaded', () => {
         if (modoEdicion) {
             guardarBtn.style.display = 'none';
             actualizarBtn.style.display = 'block';
-            actualizarBtn.addEventListener('click', actualizarDatos);
+            actualizarBtn.addEventListener('click', () => {
+                if (!validarDatosModulosInversores()) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Datos Incompletos',
+                        text: 'Por favor, complete todos los campos de módulos e inversores antes de continuar'
+                    });
+                    return;
+                }
+
+                Swal.fire({
+                    title: "Datos del cliente",
+                    html: `
+                        <input id="swal-input-referencia" class="swal2-input" placeholder="Referencia" 
+                            value="${localStorage.getItem('clienteReferencia') || ''}">
+                        <input id="swal-input-nombre" class="swal2-input" placeholder="Nombre del Cliente"
+                            value="${localStorage.getItem('clienteNombre') || ''}">
+                        <input id="swal-input-telefono" class="swal2-input" placeholder="Teléfono"
+                            value="${localStorage.getItem('clienteTelefono') || ''}">
+                        <input id="swal-input-correo" class="swal2-input" placeholder="Correo"
+                            value="${localStorage.getItem('clienteCorreo') || ''}">
+                    `,
+                    focusConfirm: false,
+                    showCancelButton: true,
+                    confirmButtonText: 'Actualizar',
+                    cancelButtonText: 'Cancelar',
+                    preConfirm: () => {
+                        const datosCliente = {
+                            referencia: document.getElementById("swal-input-referencia").value,
+                            cliente: document.getElementById("swal-input-nombre").value,
+                            telefono: document.getElementById("swal-input-telefono").value,
+                            correo: document.getElementById("swal-input-correo").value
+                        };
+                        return {
+                            ...obtenerDatosParaInsertar(),
+                            ...datosCliente,
+                            id: localStorage.getItem('editandoId')
+                        };
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch('/actualizarSistemaFotovoltaico', {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(result.value)
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.fire('¡Éxito!', 'Sistema actualizado correctamente', 'success');
+                                }
+                            });
+                    }
+                });
+            });
         } else {
             guardarBtn.style.display = 'block';
             actualizarBtn.style.display = 'none';
-            guardarBtn.addEventListener('click', guardarDatos);
+            guardarBtn.addEventListener('click', () => {
+                if (!validarDatosModulosInversores()) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Datos Incompletos',
+                        text: 'Por favor, complete todos los campos de módulos e inversores antes de continuar'
+                    });
+                    return;
+                }
+
+                Swal.fire({
+                    title: "Datos del cliente",
+                    html: `
+                        <input id="swal-input-referencia" class="swal2-input" placeholder="Referencia">
+                        <input id="swal-input-nombre" class="swal2-input" placeholder="Nombre del Cliente">
+                        <input id="swal-input-telefono" class="swal2-input" placeholder="Teléfono">
+                        <input id="swal-input-correo" class="swal2-input" placeholder="Correo">
+                    `,
+                    focusConfirm: false,
+                    showCancelButton: true,
+                    confirmButtonText: 'Guardar',
+                    cancelButtonText: 'Cancelar',
+                    preConfirm: () => {
+                        const datosCliente = {
+                            referencia: document.getElementById("swal-input-referencia").value,
+                            cliente: document.getElementById("swal-input-nombre").value,
+                            telefono: document.getElementById("swal-input-telefono").value,
+                            correo: document.getElementById("swal-input-correo").value
+                        };
+                        return {
+                            ...obtenerDatosParaInsertar(),
+                            ...datosCliente
+                        };
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch('/guardarSistemaFotovoltaico', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(result.value)
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.fire('¡Éxito!', 'Sistema guardado correctamente', 'success');
+                                }
+                            });
+                    }
+                });
+            });
         }
     }
 
@@ -201,41 +304,41 @@ function obtenerDatosParaInsertar() {
     };
 }
 
-//AQUI SE ESTAN REALIZANDO MODIFICACIONES PARA LA MODALIDAD DE EDICION
-async function solicitarDatosCliente() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const modoEdicion = urlParams.get('modo') === 'edicion';
+// //AQUI SE ESTAN REALIZANDO MODIFICACIONES PARA LA MODALIDAD DE EDICION
+// async function solicitarDatosCliente() {
+//     const urlParams = new URLSearchParams(window.location.search);
+//     const modoEdicion = urlParams.get('modo') === 'edicion';
 
-    const { value: formValues } = await Swal.fire({
-        title: "Datos del cliente",
-        html: `
-            <input id="swal-input-referencia" class="swal2-input" placeholder="Referencia" 
-                value="${modoEdicion ? localStorage.getItem('clienteReferencia') || '' : ''}">
-            <input id="swal-input-nombre" class="swal2-input" placeholder="Nombre del Cliente"
-                value="${modoEdicion ? localStorage.getItem('clienteNombre') || '' : ''}">
-            <input id="swal-input-telefono" class="swal2-input" placeholder="Teléfono"
-                value="${modoEdicion ? localStorage.getItem('clienteTelefono') || '' : ''}">
-            <input id="swal-input-correo" class="swal2-input" placeholder="Correo"
-                value="${modoEdicion ? localStorage.getItem('clienteCorreo') || '' : ''}">
-        `,
-        focusConfirm: false,
-        preConfirm: () => {
-            return {
-                referencia: document.getElementById("swal-input-referencia").value,
-                cliente: document.getElementById("swal-input-nombre").value,
-                telefono: document.getElementById("swal-input-telefono").value,
-                correo: document.getElementById("swal-input-correo").value
-            };
-        }
-    });
+//     const { value: formValues } = await Swal.fire({
+//         title: "Datos del cliente",
+//         html: `
+//             <input id="swal-input-referencia" class="swal2-input" placeholder="Referencia" 
+//                 value="${modoEdicion ? localStorage.getItem('clienteReferencia') || '' : ''}">
+//             <input id="swal-input-nombre" class="swal2-input" placeholder="Nombre del Cliente"
+//                 value="${modoEdicion ? localStorage.getItem('clienteNombre') || '' : ''}">
+//             <input id="swal-input-telefono" class="swal2-input" placeholder="Teléfono"
+//                 value="${modoEdicion ? localStorage.getItem('clienteTelefono') || '' : ''}">
+//             <input id="swal-input-correo" class="swal2-input" placeholder="Correo"
+//                 value="${modoEdicion ? localStorage.getItem('clienteCorreo') || '' : ''}">
+//         `,
+//         focusConfirm: false,
+//         preConfirm: () => {
+//             return {
+//                 referencia: document.getElementById("swal-input-referencia").value,
+//                 cliente: document.getElementById("swal-input-nombre").value,
+//                 telefono: document.getElementById("swal-input-telefono").value,
+//                 correo: document.getElementById("swal-input-correo").value
+//             };
+//         }
+//     });
 
-    if (formValues) {
-        return formValues;
-    } else {
-        Swal.fire("Error", "Debe completar los datos del cliente", "error");
-        return null;
-    }
-}
+//     if (formValues) {
+//         return formValues;
+//     } else {
+//         Swal.fire("Error", "Debe completar los datos del cliente", "error");
+//         return null;
+//     }
+// }
 
 // async function solicitarDatosCliente() {
 //     const { value: formValues } = await Swal.fire({
@@ -265,31 +368,31 @@ async function solicitarDatosCliente() {
 //     }
 // }
 
-async function guardarDatos() {
-    const datosCliente = await solicitarDatosCliente();
-    if (!datosCliente) return;
+// async function guardarDatos() {
+//     const datosCliente = await solicitarDatosCliente();
+//     if (!datosCliente) return;
 
-    const datosParaInsertar = {
-        ...obtenerDatosParaInsertar(),
-        ...datosCliente
-    };
+//     const datosParaInsertar = {
+//         ...obtenerDatosParaInsertar(),
+//         ...datosCliente
+//     };
 
-    fetch('/guardarSistemaFotovoltaico', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(datosParaInsertar)
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                Swal.fire('¡Éxito!', 'Los datos han sido guardados exitosamente.', 'success');
-            } else {
-                Swal.fire('Error', data.message, 'error');
-            }
-        });
-}
+//     fetch('/guardarSistemaFotovoltaico', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify(datosParaInsertar)
+//     })
+//         .then(response => response.json())
+//         .then(data => {
+//             if (data.success) {
+//                 Swal.fire('¡Éxito!', 'Los datos han sido guardados exitosamente.', 'success');
+//             } else {
+//                 Swal.fire('Error', data.message, 'error');
+//             }
+//         });
+// }
 
 //EDITAR REGISTROS
 // Función para cargar datos del registro seleccionado
@@ -334,35 +437,35 @@ async function editarRegistro(idCliente) {
 }
 
 
-// Función para actualizar datos
-async function actualizarDatos() {
-    const datosCliente = await solicitarDatosCliente();
-    if (!datosCliente) return;
+// // Función para actualizar datos
+// async function actualizarDatos() {
+//     const datosCliente = await solicitarDatosCliente();
+//     if (!datosCliente) return;
 
-    const datosParaActualizar = {
-        ...obtenerDatosParaInsertar(),
-        ...datosCliente,
-        id: localStorage.getItem('editandoId')
-    };
+//     const datosParaActualizar = {
+//         ...obtenerDatosParaInsertar(),
+//         ...datosCliente,
+//         id: localStorage.getItem('editandoId')
+//     };
 
-    try {
-        const response = await fetch('/actualizarSistemaFotovoltaico', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(datosParaActualizar)
-        });
+//     try {
+//         const response = await fetch('/actualizarSistemaFotovoltaico', {
+//             method: 'PUT',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify(datosParaActualizar)
+//         });
 
-        const data = await response.json();
+//         const data = await response.json();
 
-        if (data.success) {
-            await Swal.fire('¡Éxito!', 'Los cambios han sido guardados exitosamente.', 'success');
-        } else {
-            Swal.fire('Error', data.message, 'error');
-        }
-    } catch (error) {
-        Swal.fire('Error', 'Hubo un problema al actualizar los datos', 'error');
-    }
-}
+//         if (data.success) {
+//             await Swal.fire('¡Éxito!', 'Los cambios han sido guardados exitosamente.', 'success');
+//         } else {
+//             Swal.fire('Error', data.message, 'error');
+//         }
+//     } catch (error) {
+//         Swal.fire('Error', 'Hubo un problema al actualizar los datos', 'error');
+//     }
+// }
 

@@ -119,6 +119,8 @@
         </div>
     </footer>
     <script src="src/controllers/formulas.js"></script>
+    <script src="src/controllers/validaciones.js"></script>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -126,6 +128,25 @@
             const modoEdicion = urlParams.get('modo') === 'edicion';
             const guardarBtn = document.querySelector('.guardar');
             const actualizarBtn = document.querySelector('.actualizar');
+
+            //validar campos de inversor y módulo
+            guardarBtn.addEventListener('click', async () => {
+                if (validarDatosModulosInversores()) {
+                    const datosCliente = await solicitarDatosCliente();
+                    if (datosCliente) {
+                        guardarDatos();
+                    }
+                }
+            });
+
+            actualizarBtn.addEventListener('click', async () => {
+                if (validarDatosModulosInversores()) {
+                    const datosCliente = await solicitarDatosCliente();
+                    if (datosCliente) {
+                        actualizarDatos();
+                    }
+                }
+            });
 
             if (modoEdicion) {
                 guardarBtn.style.display = 'none';
@@ -142,12 +163,12 @@
                         if (resultado && resultado.data) {
                             const data = resultado.data;
                             // Módulos
-                            document.getElementById('modulos-utilizar').value = data.modulos_utilizar || '';
-                            document.getElementById('potencia-modulo').value = data.potencia_modulo || '';
+                            //document.getElementById('modulos-utilizar').value = data.modulos_utilizar || '';
+                            //document.getElementById('potencia-modulo').value = data.potencia_modulo || '';
                             document.getElementById('marca-modulo').value = data.marca_modulo || '';
 
                             // Inversores
-                            document.getElementById('potencia-inversor').value = data.potencia_inversor || '';
+                            //document.getElementById('potencia-inversor').value = data.potencia_inversor || '';
                             document.getElementById('marca-inversor').value = data.marca_inversor || '';
                         }
                     });
