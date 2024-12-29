@@ -129,7 +129,7 @@ td {
 /* Sección de ubicación */
 .seccion-ubicacion {
   width: 400px;
-  height: 400px;
+  height: 420px;
   background-color: #ffffff;
   padding: 20px; /* Espaciado en todos los lados */
   border-radius: 20px;
@@ -142,7 +142,8 @@ td {
 
 .seccion-ubicacion h2 {
   text-align: center; /* Centra el título */
-  margin-bottom: 20px; /* Espacio debajo del título */
+  margin-top: 5px;
+  margin-bottom: 15px; /* Espacio debajo del título */
 }
 
 .input-ubicacion {

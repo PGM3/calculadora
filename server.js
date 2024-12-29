@@ -489,12 +489,13 @@ app.get('/generarPDF/:id_cliente', async (req, res) => {
         return canvas.toBuffer();
     };
 
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', 'attachment; filename=propuesta_tecnica.pdf');
-    doc.pipe(res);
+    //  res.setHeader('Content-Type', 'application/pdf');
+    //  res.setHeader('Content-Disposition', 'attachment; filename=${datos.referencia}_propuesta_Tecnica.pdf');
+    //  doc.pipe(res);
+
 
     const query = `
-        SELECT 
+        SELECT
             c.*, s.*, u.*,
             m.modulos_utilizar,
         m.potencia_nominal_salida as potencia_modulo,
@@ -521,6 +522,8 @@ app.get('/generarPDF/:id_cliente', async (req, res) => {
         WHERE c.id_cliente = ?
         GROUP BY c.id_cliente`;
 
+
+        
     conexion.query(query, [req.params.id_cliente], async (error, results) => {
         if (error) {
             console.error('Error en la consulta:', error);
@@ -529,6 +532,11 @@ app.get('/generarPDF/:id_cliente', async (req, res) => {
 
         const datos = results[0];
         const consumos = JSON.parse(`[${datos.consumos_json}]`);
+
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename=${datos.referencia}_propuesta_tecnica.pdf`);
+        doc.pipe(res);
+
 
         //FECHAS PARA EL PDF
         // Extraer la primera fecha de inicio (más antigua) y la última fecha de fin (más reciente) 
@@ -588,7 +596,7 @@ app.get('/generarPDF/:id_cliente', async (req, res) => {
         agregarCajaSombreada('ANÁLISIS DE CONSUMO');
 
         doc.fontSize(11).fillColor('#333333')
-            .text(`En la siguiente tabla se muestra el consumo de ${datos.nombre_cliente} del último año comprendido en el periodo del día ${fechaInicio.split('/')[0]} del mes de ${fechaInicio.split('/')[1]} del año ${fechaInicio.split('/')[2]} al día ${fechaFin.split('/')[0]} del mes de ${fechaFin.split('/')[1]} del año ${fechaFin.split('/')[2]}.`, 50, doc.y + 10,
+            .text(`En la siguiente tabla se muestra el consumo de ${datos.nombre_cliente} del último año comprendido en el periodo del día ${fechaInicio.split('/')[0]} del mes ${fechaInicio.split('/')[1]} del año ${fechaInicio.split('/')[2]} al día ${fechaFin.split('/')[0]} del mes de ${fechaFin.split('/')[1]} del año ${fechaFin.split('/')[2]}.`, 50, doc.y + 10,
                 {
                     align: 'justify',
                     width: 495
@@ -712,15 +720,13 @@ app.get('/generarPDF/:id_cliente', async (req, res) => {
         agregarCajaSombreada('DESCRIPCIÓN TÉCNICA DEL SISTEMA PROPUESTO');
 
         doc.fontSize(11).fillColor('#333333')
-            .text(`El sistema fotovoltaico propuesto interconectado a la red eléctrica tiene una capacidad de ${datos.potencia_pico} kWp 
-                y se estima que tendrá una generación cuatrimestral aproximadamente de ${datos.promedio_anual / 3} kwh.`, 50, doc.y + 10,{
+            .text(`El sistema fotovoltaico propuesto interconectado a la red eléctrica tiene una capacidad de ${datos.potencia_pico} kWp y se estima que tendrá una generación cuatrimestral aproximadamente de ${datos.promedio_anual / 3} kwh.`, 50, doc.y + 10, {
                 align: 'justify',
                 width: 495
             })
             .moveDown();
 
-        doc.text(`El sistema consiste en un arreglo serie de ${datos.modulos_utilizar} módulos fotovoltaicos de ${datos.potencia_modulo} Wh ${datos.marca_modulo}, 
-            cuya generación eléctrica será inyectada a la red mediante un inversor CD/CA de ${datos.potencia_inversor} kwp el cual cumple con las normas de CFE.`, 50, doc.y + 10, {
+        doc.text(`El sistema consiste en un arreglo serie de ${datos.modulos_utilizar} módulos fotovoltaicos de ${datos.potencia_modulo} Wh ${datos.marca_modulo}, cuya generación eléctrica será inyectada a la red mediante un inversor CD/CA de ${datos.potencia_inversor} kwp el cual cumple con las normas de CFE.`, 50, doc.y + 10, {
             align: 'justify',
             width: 495
         })
