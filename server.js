@@ -523,7 +523,7 @@ app.get('/generarPDF/:id_cliente', async (req, res) => {
         GROUP BY c.id_cliente`;
 
 
-        
+
     conexion.query(query, [req.params.id_cliente], async (error, results) => {
         if (error) {
             console.error('Error en la consulta:', error);
@@ -539,15 +539,24 @@ app.get('/generarPDF/:id_cliente', async (req, res) => {
 
 
         //FECHAS PARA EL PDF
+        const obtenerNombreMes = (fecha) => {
+            const [dia, mes, año] = fecha.split('/');
+            const fechaObj = new Date(año, mes - 1, dia);
+            return fechaObj.toLocaleString('es-ES', { month: 'long' });
+        }
+
         // Extraer la primera fecha de inicio (más antigua) y la última fecha de fin (más reciente) 
-        let fechaInicio = consumos[0].inicio; // Inicializar con la primera fecha de inicio 
-        let fechaFin = consumos[0].fin; // Inicializar con la primera fecha de fin
+        let fechaInicio = consumos[0].inicio;
+        let fechaFin = consumos[0].fin;
 
         // Iterar sobre todos los consumos para encontrar las fechas correctas 
-        consumos.forEach(consumo => { // Comparar fechas de inicio 
-            if (new Date(consumo.inicio.split('/').reverse().join('-')) < new Date(fechaInicio.split('/').reverse().join('-'))) { fechaInicio = consumo.inicio; }
-            // Comparar fechas de fin 
-            if (new Date(consumo.fin.split('/').reverse().join('-')) > new Date(fechaFin.split('/').reverse().join('-'))) { fechaFin = consumo.fin; }
+        consumos.forEach(consumo => {
+            if (new Date(consumo.inicio.split('/').reverse().join('-')) < new Date(fechaInicio.split('/').reverse().join('-'))) {
+                fechaInicio = consumo.inicio;
+            }
+            if (new Date(consumo.fin.split('/').reverse().join('-')) > new Date(fechaFin.split('/').reverse().join('-'))) {
+                fechaFin = consumo.fin;
+            }
         });
 
 
@@ -596,7 +605,7 @@ app.get('/generarPDF/:id_cliente', async (req, res) => {
         agregarCajaSombreada('ANÁLISIS DE CONSUMO');
 
         doc.fontSize(11).fillColor('#333333')
-            .text(`En la siguiente tabla se muestra el consumo de ${datos.nombre_cliente} del último año comprendido en el periodo del día ${fechaInicio.split('/')[0]} del mes ${fechaInicio.split('/')[1]} del año ${fechaInicio.split('/')[2]} al día ${fechaFin.split('/')[0]} del mes de ${fechaFin.split('/')[1]} del año ${fechaFin.split('/')[2]}.`, 50, doc.y + 10,
+            .text(`En la siguiente tabla se muestra el consumo de ${datos.nombre_cliente} del último año comprendido en el periodo del día ${fechaInicio.split('/')[0]} del mes  ${obtenerNombreMes(fechaInicio)} del año ${fechaInicio.split('/')[2]} al día ${fechaFin.split('/')[0]} del mes de  ${obtenerNombreMes(fechaFin)} del año ${fechaFin.split('/')[2]}.`, 50, doc.y + 10,
                 {
                     align: 'justify',
                     width: 495
