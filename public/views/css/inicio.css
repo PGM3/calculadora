@@ -188,12 +188,25 @@ th {
   background-color: #999999;
 }
 
+td {
+  border: 2px solid #000000;
+  padding: 8px;
+  text-align: center;
+  overflow-x: auto;
+  max-width: 450px;
+}
+
 #campo-nombre{
   width: 450px;
 }
 
 #campo-tipo{
   width: 300px;
+}
+
+.acciones {
+  width: 200px;
+  min-width: 200px;
 }
 
 .acciones button {

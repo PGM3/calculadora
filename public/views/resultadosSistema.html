@@ -128,26 +128,49 @@
             const modoEdicion = urlParams.get('modo') === 'edicion';
             const guardarBtn = document.querySelector('.guardar');
             const actualizarBtn = document.querySelector('.actualizar');
+            const pdfBtn = document.querySelector('.pdf');
 
-            //validar campos de inversor y módulo
+
+            // Si no es modo edición, deshabilitar el botón PDF inicialmente
+            if (!modoEdicion) {
+                pdfBtn.disabled = true;
+                pdfBtn.style.opacity = '0.5';
+                pdfBtn.style.cursor = 'not-allowed';
+            }
+
+            // En el evento del botón guardar, después de guardar exitosamente
             guardarBtn.addEventListener('click', async () => {
                 if (validarDatosModulosInversores()) {
-                    const datosCliente = await solicitarDatosCliente();
-                    if (datosCliente) {
-                        guardarDatos();
+                    const respuesta = await guardarDatos();
+                    if (respuesta && respuesta.success) {
+                        localStorage.setItem('editandoId', respuesta.idCliente);
+                        // Habilitar el botón PDF
+                        pdfBtn.disabled = false;
+                        pdfBtn.style.opacity = '1';
+                        pdfBtn.style.cursor = 'pointer';
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Éxito',
+                            text: 'Sistema guardado correctamente. Ahora puedes generar el PDF.',
+                            willClose: () => {
+                                window.location.href = window.location.pathname;
+                            }
+                        });
                     }
                 }
             });
 
+
+
+            // Evento para el botón actualizar
             actualizarBtn.addEventListener('click', async () => {
                 if (validarDatosModulosInversores()) {
-                    const datosCliente = await solicitarDatosCliente();
-                    if (datosCliente) {
-                        actualizarDatos();
-                    }
+                    actualizarDatos();
                 }
             });
 
+            // Configuración modo edición
             if (modoEdicion) {
                 guardarBtn.style.display = 'none';
                 actualizarBtn.style.display = 'block';
@@ -159,16 +182,9 @@
                     .then(response => response.json())
                     .then(resultado => {
                         console.log('Respuesta completa:', resultado);
-
                         if (resultado && resultado.data) {
                             const data = resultado.data;
-                            // Módulos
-                            //document.getElementById('modulos-utilizar').value = data.modulos_utilizar || '';
-                            //document.getElementById('potencia-modulo').value = data.potencia_modulo || '';
                             document.getElementById('marca-modulo').value = data.marca_modulo || '';
-
-                            // Inversores
-                            //document.getElementById('potencia-inversor').value = data.potencia_inversor || '';
                             document.getElementById('marca-inversor').value = data.marca_inversor || '';
                         }
                     });
@@ -176,9 +192,25 @@
                 guardarBtn.style.display = 'block';
                 actualizarBtn.style.display = 'none';
             }
+
+            // Evento para el botón PDF
+            document.querySelector('.pdf').addEventListener('click', async () => {
+                const idCliente = localStorage.getItem('editandoId');
+
+                if (!idCliente) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Acción requerida',
+                        text: 'Primero debes guardar el sistema antes de generar el PDF'
+                    });
+                } else {
+                    window.open(`/generarPDF/${idCliente}`, '_blank');
+                }
+            });
+
         });
 
     </script>
 </body>
 
-</html
+</html>
