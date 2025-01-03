@@ -233,6 +233,32 @@ main {
   border-radius: 5px;
 }
 
+textarea {
+  resize: vertical;
+}
+
+.tabla-inversor textarea[id="marca-inversor"] {
+  font-family: poppins;
+  width: 95%;
+  padding: 10px;
+  margin-top: 10px;
+  border: 1px solid #000;
+  border-radius: 5px;
+  height: 50px; /* Aumentamos la altura */
+}
+
+
+.tabla-modulos textarea[id="marca-modulo"] {
+  font-family: poppins;
+  width: 95%;
+  padding: 10px;
+  margin-top: 10px;
+  border: 1px solid #000;
+  border-radius: 5px;
+  height: 151px; /* Aumentamos la altura */
+}
+
+
 .buttons {
   display: flex; /* Usar flexbox para alinear los botones en fila */
   justify-content: flex-end; /* Alinear los botones al final (derecha) */
@@ -241,16 +267,16 @@ main {
 }
 
 .buttons button {
-  padding: 16px; /* Ajusta el padding para que sean más pequeños */
   font-size: 16px; /* Cambia el tamaño de la fuente */
   font-weight: bold;
   width: 210px; /* Ajusta el ancho del botón */
   height: 42px; /* Ajusta la altura del botón */
   color: rgb(0, 0, 0); /* Color del texto */
-  border: none; /* Sin borde */
+  border:none; /* Sin borde */
   border-radius: 20px; /* Bordes redondeados */
   cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
-  margin-left: 20px; /* Espacio entre los botones */
+  margin-left: 25px; /* Espacio entre los botones */
+  margin-right: 20px; /* Espacio entre los botones */
   text-align: center; /* Centra el texto dentro del botón */
   display: flex; /* Cambia a flexbox para centrar contenido */
   align-items: center; /* Centra verticalmente el contenido */
@@ -258,7 +284,6 @@ main {
 }
 
   .guardar {
-    margin-right: 48px;
     background-color: #14a218;
   }
   
@@ -268,12 +293,13 @@ main {
     border-color: #030003;
   }
   
-  .pdf {
+  .regresar {
     background-color: #FF9900;
   }
   
-  .pdf:hover {
-    background-color: #ac1313;
+  .regresar:hover {
+    background-color: #3c13ac;
+    color: rgb(255, 255, 255);
     border: 2px solid;
     border-color: #030003;
   }

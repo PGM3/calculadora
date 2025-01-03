@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Sistemas Fotovoltaicos</title>
     <link rel="stylesheet" href="css/principal.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
 <html>
@@ -125,7 +127,6 @@
         const continuarBtn = document.querySelector('.continuar');
 
         // Verificar modo edición y cargar datos
-        // Verificar modo edición y cargar datos
         if (urlParams.get('modo') === 'edicion') {
             // Cargar datos de ubicación
             const ubicacionInput = document.getElementById('ubicacion');
@@ -227,6 +228,25 @@
             });
         }
     });
+
+    //BOTON CANCELAR
+    document.querySelector('.cancelar').addEventListener('click', () => {
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "Se perderán los datos ingresados",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, cancelar',
+            cancelButtonText: 'No, continuar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = 'inicioSistema.html';
+            }
+        });
+    });
+
 
 </script>
 

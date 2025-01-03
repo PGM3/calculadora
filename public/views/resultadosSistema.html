@@ -25,7 +25,7 @@
             <div class="seccion-tamano">
                 <h3>TAMAÑO DEL SISTEMA</h3>
                 <label for="potencia-pico">Potencia Pico del Sistema (KW):</label>
-                <input id="potencia-pico" type="text" />
+                <input id="potencia-pico" type="text" readonly/>
             </div>
             <div class="seccion-promedios">
                 <table class="tabla-consumo">
@@ -38,9 +38,9 @@
                         <th>Consumo Anual Calculado</th>
                     </tr>
                     <tr>
-                        <td><input id="promedio-diario" type="text" /></td>
-                        <td><input id="promedio-mensual" type="text" /></td>
-                        <td><input id="promedio-anual" type="text" /></td>
+                        <td><input id="promedio-diario" type="text" readonly /></td>
+                        <td><input id="promedio-mensual" type="text" readonly /></td>
+                        <td><input id="promedio-anual" type="text" readonly/></td>
                     </tr>
                 </table>
             </div>
@@ -60,25 +60,32 @@
                         </th>
                     </tr>
                     <tr>
-                        <td><label for="marca-inversor">Marca del Inversor:</label></td>
+                        <td><label for="marca-inversor">Información del Inversor:</label></td>
                     </tr>
                     <tr>
-                        <td><input id="marca-inversor" type="text" /></td>
+                        <td><textarea id="marca-inversor" type="text"></textarea></td>
                     </tr>
                     <tr>
-                        <td><label for="potencia-inversor">Potencia Nominal de Salida (W):</label></td>
+                        <td><label for="potencia-requerida">Potencia Requerida (W):</label></td>
                     </tr>
                     <tr>
-                        <td><input id="potencia-inversor" type="text" /></td>
-                    </tr>
-                    <!-- <tr>
-                        <td><label for="inversores-utilizar">Inversores a utilizar:</label></td>
+                        <td><input id="potencia-requerida" type="text" readonly /></td>
                     </tr>
                     <tr>
-                        <td><input id="inversores-utilizar" type="text" /></td>
-                    </tr> -->
+                        <td><label for="potencia-propuesta">Potencia Propuesta (W):</label></td>
+                    </tr>
+                    <tr>
+                        <td><input id="potencia-propuesta" type="text" /></td>
+                    </tr>
+                    <tr>
+                        <td><label for="inversores-requeridos">Inversores Requeridos:</label></td>
+                    </tr>
+                    <tr>
+                        <td><input id="inversores-requeridos" type="text" readonly /></td>
+                    </tr>
                 </table>
             </div>
+
             <div class="seccion-modulos">
                 <table class="tabla-modulos">
                     <tr>
@@ -87,10 +94,10 @@
                         </th>
                     </tr>
                     <tr>
-                        <td><label for="marca-modulo">Marca del Módulo:</label></td>
+                        <td><label for="marca-modulo">Información del Módulo:</label></td>
                     </tr>
                     <tr>
-                        <td><input id="marca-modulo" type="text" /></td>
+                        <td><textarea id="marca-modulo" type="text"></textarea></td>
                     </tr>
                     <tr>
                         <td><label for="potencia-modulo">Potencia Nominal de Salida(W):</label></td>
@@ -102,15 +109,17 @@
                         <td><label for="modulos-utilizar">Módulos a utilizar:</label></td>
                     </tr>
                     <tr>
-                        <td><input id="modulos-utilizar" type="text" /></td>
+                        <td><input id="modulos-utilizar" type="text" readonly /></td>
                     </tr>
                 </table>
             </div>
+
         </div>
         <div class="buttons">
+            <button class="regresar">Regresar</button>
             <button class="guardar">Guardar</button>
             <button class="actualizar" style="display: none;">Actualizar</button>
-            <button class="pdf">PDF</button>
+
         </div>
     </main>
     <footer>
@@ -130,24 +139,12 @@
             const actualizarBtn = document.querySelector('.actualizar');
             const pdfBtn = document.querySelector('.pdf');
 
-
-            // Si no es modo edición, deshabilitar el botón PDF inicialmente
-            if (!modoEdicion) {
-                pdfBtn.disabled = true;
-                pdfBtn.style.opacity = '0.5';
-                pdfBtn.style.cursor = 'not-allowed';
-            }
-
             // En el evento del botón guardar, después de guardar exitosamente
             guardarBtn.addEventListener('click', async () => {
                 if (validarDatosModulosInversores()) {
                     const respuesta = await guardarDatos();
                     if (respuesta && respuesta.success) {
                         localStorage.setItem('editandoId', respuesta.idCliente);
-                        // Habilitar el botón PDF
-                        pdfBtn.disabled = false;
-                        pdfBtn.style.opacity = '1';
-                        pdfBtn.style.cursor = 'pointer';
 
                         Swal.fire({
                             icon: 'success',
@@ -193,19 +190,10 @@
                 actualizarBtn.style.display = 'none';
             }
 
-            // Evento para el botón PDF
-            document.querySelector('.pdf').addEventListener('click', async () => {
-                const idCliente = localStorage.getItem('editandoId');
+            // Evento para el botón Regresar
 
-                if (!idCliente) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Acción requerida',
-                        text: 'Primero debes guardar el sistema antes de generar el PDF'
-                    });
-                } else {
-                    window.open(`/generarPDF/${idCliente}`, '_blank');
-                }
+            document.querySelector('.regresar').addEventListener('click', () => {
+                history.back();
             });
 
         });
